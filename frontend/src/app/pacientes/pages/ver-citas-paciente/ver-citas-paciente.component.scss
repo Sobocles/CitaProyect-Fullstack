@@ -1,0 +1,212 @@
+.citas-container {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+}
+
+.header-citas {
+    margin-bottom: 2rem;
+    
+    .search-container {
+        margin-bottom: 2rem;
+        
+        .search-bar {
+            position: relative;
+            
+            .medical-search {
+                width: 100%;
+                padding: 1rem 1.5rem 1rem 3rem;
+                border: 2px solid #e0e0e0;
+                border-radius: 30px;
+                font-size: 1rem;
+                background: #f8f9fa;
+                transition: all 0.3s ease;
+                
+                &:focus {
+                    outline: none;
+                    border-color: #3498db;
+                    box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
+                }
+            }
+            
+            .fa-search-medical {
+                position: absolute;
+                left: 1.5rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #7f8c8d;
+            }
+        }
+    }
+}
+
+.resumen-citas {
+    text-align: center;
+    margin-bottom: 2rem;
+    
+    .titulo-citas {
+        color: #2c3e50;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        
+        .badge-total {
+            background: #3498db;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 1.2rem;
+        }
+    }
+    
+    .subtitulo-citas {
+        color: #7f8c8d;
+        font-size: 1rem;
+    }
+}
+
+.listado-citas {
+    display: grid;
+    gap: 1.5rem;
+    
+    .cita-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+        
+        &:hover {
+            transform: translateY(-2px);
+        }
+        
+        .cita-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid #f1f1f1;
+            
+            .cita-id {
+                color: #3498db;
+                font-weight: 600;
+            }
+            
+            .cita-status {
+                font-size: 0.85rem;
+                padding: 0.3rem 0.8rem;
+                border-radius: 15px;
+                
+                &.pending {
+                    background: #fff3cd;
+                    color: #856404;
+                }
+                
+                &.completed {
+                    background: #d4edda;
+                    color: #155724;
+                }
+            }
+        }
+        
+        .cita-body {
+            padding: 1.5rem;
+            display: flex;
+            gap: 2rem;
+            
+            .cita-info {
+                flex: 1;
+                display: grid;
+                gap: 1.5rem;
+                
+                .info-item {
+                    display: flex;
+                    gap: 1rem;
+                    align-items: center;
+                    
+                    i {
+                        font-size: 1.5rem;
+                        color: #3498db;
+                        width: 40px;
+                        text-align: center;
+                    }
+                    
+                    label {
+                        display: block;
+                        color: #7f8c8d;
+                        font-size: 0.9rem;
+                        margin-bottom: 0.3rem;
+                    }
+                    
+                    p {
+                        margin: 0;
+                        color: #2c3e50;
+                        font-weight: 500;
+                        
+                        &.horario {
+                            .hora {
+                                color: #3498db;
+                                margin-left: 0.5rem;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            .cita-actions {
+                display: flex;
+                align-items: center;
+                
+                .btn-detalles {
+                    background: #3498db;
+                    color: white;
+                    border: none;
+                    padding: 0.8rem 1.5rem;
+                    border-radius: 25px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    transition: background 0.3s ease;
+                    
+                    &:hover {
+                        background: #2980b9;
+                    }
+                    
+                    i {
+                        font-size: 1.1rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.sin-citas {
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+        
+        i {
+            font-size: 4rem;
+            color: #bdc3c7;
+            margin-bottom: 1rem;
+        }
+        
+        p {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+        }
+    }
+}
+
+.medical-paginator {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}

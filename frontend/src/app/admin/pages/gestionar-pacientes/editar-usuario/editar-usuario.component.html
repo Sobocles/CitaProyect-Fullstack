@@ -1,0 +1,56 @@
+
+/*
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <h2 class="text-center mb-4">Formulario de Editar Usuario</h2>
+        <form [formGroup]="formulario"
+        (ngSubmit)="editarPaciente()">
+          <div class="form-row">
+            <div class="form-group col-md-6 mb-3">
+              <label for="rut_paciente">Rut</label>
+              <input type="text" class="form-control" id="rut_paciente" formControlName="rut" placeholder="rut">
+            </div>
+            <div class="form-group col-md-6 mb-3">
+              <label for="nombres">Nombres</label>
+              <input type="text" class="form-control" id="nombres" formControlName="nombre" placeholder="Nombres">
+            </div>
+            <div class="form-group col-md-6 mb-3">
+              <label for="apellidos">Apellidos</label>
+              <input type="text" class="form-control" id="apellidos" formControlName="apellidos" placeholder="Apellidos">
+            </div>
+
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6 mb-3">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" id="email" formControlName="email" placeholder="Email">
+              <div *ngIf="formulario.get('email')?.hasError('required') && formulario.get('email')?.touched" class="text-danger">
+                El email es requerido.
+              </div>
+              <div *ngIf="formulario.get('email')?.hasError('email') && formulario.get('email')?.touched" class="text-danger">
+                El email no es válido.
+              </div>
+            </div>
+            <div class="form-group col-md-6 mb-3">
+              <label for="fechaNacimiento">Fecha de Nacimiento</label>
+              <input type="date" class="form-control" id="fechaNacimiento" formControlName="fecha_nacimiento">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6 mb-3">
+              <label for="telefono">Teléfono</label>
+              <input type="tel" class="form-control" id="telefono" formControlName="telefono" placeholder="Teléfono">
+            </div>
+          </div>
+          <div class="form-group mb-3">
+            <label for="direccion">Dirección</label>
+            <input type="text" class="form-control" id="direccion" formControlName="direccion" placeholder="Dirección">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Registrar Paciente</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+*/

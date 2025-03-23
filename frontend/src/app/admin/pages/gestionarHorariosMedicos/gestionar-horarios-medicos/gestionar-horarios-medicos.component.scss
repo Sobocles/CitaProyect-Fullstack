@@ -1,0 +1,23 @@
+.cursor {
+    cursor: pointer;
+}
+
+.icon-container {
+    display: inline-block;
+    margin-right: 10px;  /* Esto añade un pequeño espacio entre los íconos */
+}
+
+/* Forzar un layout fijo para que las columnas mantengan anchos constantes */
+table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  /* Evitar que el contenido se desborde y mostrar "..." si es muy largo */
+  table th,
+  table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  

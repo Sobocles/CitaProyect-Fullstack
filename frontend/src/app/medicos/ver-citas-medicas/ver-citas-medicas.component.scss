@@ -1,0 +1,124 @@
+.modern-search {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 30px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    
+    &:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 12px rgba(52, 152, 219, 0.2);
+    }
+}
+
+.medical-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+    
+    thead {
+        th {
+            background: #f8f9fa;
+            color: #2c3e50;
+            padding: 1rem;
+            border-bottom: 2px solid #3498db;
+        }
+    }
+    
+    tbody tr {
+        background: white;
+        transition: transform 0.2s ease;
+        
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+    }
+}
+
+.estado-container {
+    position: relative;
+    
+    .estado-select {
+        appearance: none;
+        width: 100%;
+        padding: 0.8rem 2rem 0.8rem 1rem;
+        border: none;
+        border-radius: 20px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        
+        &.en-curso {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        &.terminado {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        &.pagado {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        &:hover {
+            filter: brightness(0.95);
+        }
+        
+        &:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+        }
+    }
+    
+    .select-arrow {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid currentColor;
+        pointer-events: none;
+    }
+}
+
+.time-badge {
+    background: #f8f9fa;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+}
+
+.time-separator {
+    margin: 0 0.5rem;
+    color: #b0bec5;
+}
+
+.badge-count {
+    background: #3498db;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
+}
+
+.medical-paginator {
+    margin-top: 2rem;
+    border-top: 2px solid #f1f1f1;
+    padding-top: 1.5rem;
+}

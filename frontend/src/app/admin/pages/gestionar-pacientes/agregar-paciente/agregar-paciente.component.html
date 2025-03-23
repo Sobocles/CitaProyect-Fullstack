@@ -1,0 +1,102 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <h2 class="text-center mb-4">Formulario de Registro de Paciente</h2>
+        <form [formGroup]="formulario"
+         (ngSubmit)="crearPaciente()">
+          <div class="form-row">
+            <div class="form-group col-md-6 mb-3">
+              <label for="rut_paciente">Rut</label>
+              <input type="text" class="form-control" id="rut_paciente" formControlName="rut" placeholder="Ingrese su rut">
+              <!-- Alerta para RUT inválido -->
+              <div *ngIf="formulario.controls['rut'].errors?.['rutInvalid']" class="text-danger">
+                RUT no válido.
+              </div>
+              <!-- Alerta para campo requerido -->
+              <div *ngIf="formulario.controls['rut'].touched && formulario.controls['rut'].errors?.['required']" class="text-danger">
+                Este campo es obligatorio.
+              </div>
+            </div>
+             
+            <div class="form-group col-md-6 mb-3">
+              <label for="nombres">Nombre</label>
+              <input type="text" class="form-control" id="nombres" formControlName="nombre" placeholder="Ingrese su nombre">
+              <!-- Alerta para campo requerido -->
+              <div *ngIf="formulario.controls['nombre'].touched && formulario.controls['nombre'].errors?.['required']" class="text-danger">
+                Este campo es obligatorio.
+              </div>
+            </div>
+            
+            <div class="form-group col-md-6 mb-3">
+              <label for="apellidos">Apellidos</label>
+              <input type="text" class="form-control" id="apellidos" formControlName="apellidos" placeholder="Ingrese sus apellidos">
+              <!-- Alerta para campo requerido -->
+              <div *ngIf="formulario.controls['apellidos'].touched && formulario.controls['apellidos'].errors?.['required']" class="text-danger">
+                Este campo es obligatorio.
+              </div>
+            </div>
+            
+            <div class="form-group col-md-6 mb-3">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" id="password" formControlName="password" placeholder="ingrese contraseña">
+              <!-- Alerta para fuerza de contraseña -->
+              <div *ngIf="formulario.controls['password'].errors?.['passwordStrength']" class="text-danger">
+                La contraseña debe incluir mayúsculas, números y caracteres especiales.
+              </div>
+            </div>
+            
+          </div>
+         
+          <div class="form-group col-md-6 mb-3">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" formControlName="email" placeholder="ingrese su email">
+            <div *ngIf="formulario.get('email')?.hasError('required') && formulario.get('email')?.touched" class="text-danger">
+              El email es requerido.
+            </div>
+            <div *ngIf="formulario.get('email')?.hasError('email') && formulario.get('email')?.touched" class="text-danger">
+              El email no es válido.
+            </div>
+            <!-- Alerta para email no Gmail -->
+            <div *ngIf="formulario.get('email')?.hasError('notGmail') && formulario.get('email')?.touched" class="text-danger">
+              Solo se permiten direcciones de email de Gmail.
+            </div>
+          </div>
+          
+          <div class="form-group col-md-6 mb-3">
+            <label for="fechaNacimiento">Fecha de Nacimiento</label>
+            <input type="date" class="form-control" id="fechaNacimiento" formControlName="fecha_nacimiento">
+            <!-- Alerta para campo requerido -->
+            <div *ngIf="formulario.controls['fecha_nacimiento'].touched && formulario.controls['fecha_nacimiento'].errors?.['required']" class="text-danger">
+              Este campo es obligatorio.
+            </div>
+          </div>
+          
+        
+       
+          <div class="form-group col-md-6 mb-3">
+            <label for="telefono">Teléfono</label>
+            <input type="tel" class="form-control" id="telefono" formControlName="telefono" placeholder="ingrese su Teléfono">
+            <!-- Alerta para campo requerido -->
+            <div *ngIf="formulario.controls['telefono'].touched && formulario.controls['telefono'].errors?.['required']" class="text-danger">
+              Este campo es obligatorio.
+            </div>
+            <!-- Alerta para formato de teléfono inválido -->
+            <div *ngIf="formulario.controls['telefono'].errors?.['telefonoInvalido'] && formulario.controls['telefono'].touched" class="text-danger">
+              Formato de teléfono inválido. Debe ser +56 9 XXXX-XXXX.
+            </div>
+          </div>
+          <div class="form-group mb-3">
+            <label for="direccion">Dirección</label>
+            <input type="text" class="form-control" id="direccion" formControlName="direccion" placeholder="ingrese su Dirección">
+            <!-- Alerta para campo requerido -->
+            <div *ngIf="formulario.controls['direccion'].touched && formulario.controls['direccion'].errors?.['required']" class="text-danger">
+              Este campo es obligatorio.
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-primary btn-block">Registrar Paciente</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  

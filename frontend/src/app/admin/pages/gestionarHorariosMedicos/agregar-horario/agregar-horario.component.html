@@ -1,0 +1,86 @@
+<button type="button" class="btn btn-secondary btn-block mt-3" (click)="regresar()">Regresar a Horarios Médicos</button>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h2 class="text-center mb-4">
+        {{ isEditMode ? 'Editar Horario Médico' : 'Formulario de Registro de Horario Médico' }}
+      </h2>
+      <div style="background-color: #ffcc00; color: #333; padding: 10px; border-radius: 5px; margin: 20px 0; border: 1px solid #ffa500;">
+        <strong>Advertencia:</strong> Por favor, asegúrese de haber completado el formulario de Tipo de Cita para que los médicos con sus especialidades se muestren correctamente en este formulario.
+      </div>
+      
+      <form [formGroup]="horarioMedicoForm" (ngSubmit)="onSubmit()">
+        <div class="form-group mt-3">
+          <label for="diaSemana">Día de la Semana</label>
+          <select class="form-control" id="diaSemana" formControlName="diaSemana">
+            <option value="">Seleccione día de la semana</option>
+            <option value="lunes">Lunes</option>
+            <option value="martes">Martes</option>
+            <option value="miercoles">Miércoles</option>
+            <option value="jueves">Jueves</option>
+            <option value="viernes">Viernes</option>
+            <option value="sabado">Sábado</option>
+            <option value="domingo">Domingo</option>
+          </select>
+          <div *ngIf="horarioMedicoForm.controls['diaSemana'].touched && horarioMedicoForm.controls['diaSemana'].hasError('required')" class="text-danger">
+            Este campo es obligatorio.
+          </div>
+        </div>
+
+        <div class="form-group mt-3">
+          <label for="horaInicio">Hora de Inicio</label>
+          <input type="time" class="form-control" id="horaInicio" formControlName="horaInicio" placeholder="08:00:00">
+          <div *ngIf="horarioMedicoForm.controls['horaInicio'].touched && horarioMedicoForm.controls['horaInicio'].hasError('required')" class="text-danger">
+            Este campo es obligatorio.
+          </div>
+        </div>
+
+        <div class="form-group mt-3">
+          <label for="horaFinalizacion">Hora de Finalización</label>
+          <input type="time" class="form-control" id="horaFinalizacion" formControlName="horaFinalizacion" placeholder="12:00:00">
+          <div *ngIf="horarioMedicoForm.controls['horaFinalizacion'].touched && horarioMedicoForm.controls['horaFinalizacion'].hasError('required')" class="text-danger">
+            Este campo es obligatorio.
+          </div>
+        </div>
+
+        <div *ngIf="horarioMedicoForm.errors?.['horarioLaboralInvalido']" class="text-danger">
+          La hora de inicio debe ser anterior a la hora de finalización.
+        </div>
+
+        <div class="form-group mt-3">
+          <label for="inicioColacion">Hora de Inicio de Colación</label>
+          <input type="time" class="form-control" id="inicioColacion" formControlName="inicio_colacion">
+          <div *ngIf="horarioMedicoForm.errors?.['horarioColacionFuera']" class="text-danger">
+            El horario de colación debe estar dentro del horario laboral.
+          </div>
+        </div>
+
+        <div class="form-group mt-3">
+          <label for="finColacion">Hora de Fin de Colación</label>
+          <input type="time" class="form-control" id="finColacion" formControlName="fin_colacion">
+          <div *ngIf="horarioMedicoForm.errors?.['horarioColacionFuera']" class="text-danger">
+            El horario de colación debe estar dentro del horario laboral.
+          </div>
+          <div *ngIf="horarioMedicoForm.errors?.['colacionInvalida']" class="text-danger">
+            La hora de inicio de colación debe ser anterior a la hora de fin de colación.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="rutMedico">Médico</label>
+          <select class="form-control" id="rutMedico" formControlName="rut_medico" required>
+            <option value="">Selecciona un médico</option>
+            <option *ngFor="let medico of medicos" [value]="medico.rut">
+              {{ medico.nombre }} {{ medico.apellidos }} (Especialidad: {{ medico.especialidad_medica }})
+            </option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block mt-3" [disabled]="!horarioMedicoForm.valid">
+          {{ isEditMode ? 'Guardar Cambios' : 'Registrar Horario Médico' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

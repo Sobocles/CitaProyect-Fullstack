@@ -1,0 +1,42 @@
+<form [formGroup]="formularioTipoCita" (ngSubmit)="onSubmit()">
+  <div class="form-group mb-3">
+    <label for="especialidad_medica">Especialidad Médica</label>
+    <input type="text" id="especialidad_medica" formControlName="especialidad_medica" class="form-control">
+  </div>
+  
+  <div class="form-group mb-3">
+    <label for="precio">Precio</label>
+    <input type="text" id="precio" formControlName="precio" class="form-control">
+    <div *ngIf="formularioTipoCita.controls['precio'].touched">
+      <div *ngIf="formularioTipoCita.controls['precio'].hasError('required')" class="alert alert-danger">
+        El precio es requerido.
+      </div>
+      <div *ngIf="formularioTipoCita.controls['precio'].hasError('pattern')" class="alert alert-danger">
+        Solo se permiten números enteros sin ceros a la izquierda.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group mb-3">
+    <label for="duracion_cita">Duración de la Cita (solo minutos, duración máxima 180 minutos)</label>
+    <input type="text" id="duracion_cita" formControlName="duracion_cita" class="form-control">
+    <div *ngIf="formularioTipoCita.controls['duracion_cita'].touched">
+      <div *ngIf="formularioTipoCita.controls['duracion_cita'].hasError('required')" class="alert alert-danger">
+        La duración de la cita es requerida.
+      </div>
+      <div *ngIf="formularioTipoCita.controls['duracion_cita'].hasError('pattern')" class="alert alert-danger">
+        Solo se permiten números enteros para representar minutos.
+      </div>
+      <div *ngIf="formularioTipoCita.controls['duracion_cita'].hasError('max')" class="alert alert-danger">
+        La duración de la cita no puede exceder los 180 minutos (3 hrs).
+      </div>
+    </div>
+    <div *ngIf="formularioTipoCita.controls['duracion_cita']?.valid && formularioTipoCita.get('duracion_cita')?.value">
+      {{ convertirMinutosAHoras(formularioTipoCita.get('duracion_cita')?.value) }}
+    </div>
+  </div>
+  
+  <button type="submit" class="btn btn-primary" [disabled]="!formularioTipoCita.valid">
+    {{ isEditMode ? 'Guardar Cambios' : 'Crear Tipo Cita' }}
+  </button>
+</form>

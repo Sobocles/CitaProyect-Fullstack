@@ -1,0 +1,78 @@
+<div class="row animated fadeIn fast">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <input type="text"
+                        class="form-control"
+                        placeholder="Buscar Citas..."
+                        #txtTermino
+                        (keyup)="buscar( txtTermino.value )"/> <!--CUANDO SE PRESIONE UNA TECLA BUSQUE EL TERMINO KEYUP ES PARA VER LAS LETRAS QUE SE ESCRIBEN EN TIEMPO REAL MIENTRAS SE EPREISONA UNA LETRA-->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row animated fadeIn fast"> <!--SI NO ESTA CARGADO-->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Total de Citas: ({{totalCitas}}) </h4>
+                <h6 class="card-subtitle">Citas medicas</h6>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+         
+                          <th> ID </th>
+                          <th>Motivo</th>
+                          <th>Fecha</th>
+                          <th>Hora inicio</th>
+                          <th>Hora Fin</th>
+                          <th>Nombre</th>
+                          <th>Apellidos</th>
+                          <th>Estado cita</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let cita of citasMedicas">
+                          <td>{{ cita.idCita }}</td>
+                          <td>{{ cita.motivo }}</td>
+                          <td>{{ cita.fecha | date: 'mediumDate' }}</td>
+                          <td>{{ cita.hora_inicio }}</td>
+                          <td>{{ cita.hora_fin }}</td>
+                          <td>{{ cita.paciente.nombre }}</td>
+                          <td>{{ cita.paciente.apellidos}}</td>
+                          
+                          <select class="form-control" [(ngModel)]="cita.estado" (change)="cambioEstado(cita)">
+                            <option value="en_curso">En Curso</option>
+                            <option value="terminado">Terminado</option>               
+                            <option value="pagado">Pagado</option>
+                  
+                        
+                        </select>
+
+                        </tr>
+                      </tbody>
+                      
+                    </table>
+                  </div>
+                <!--ESTA CONDICION SE HACE PARA QUE CUANDO SE TECLEA EN LA BARRA DE BUSQUEDA Y SE CARGAN LOS RESULTADOS DE BUSQUEDA DESAPARESCAN LOS BOTONES SIGUIENTES Y ANTERIOR EN LA PANTALLA-->
+                <div *ngIf="txtTermino.value.length === 0"> <!--SI EL TERMINO ES IGUAL A 0 LOS BOTONES SIGUIENTE Y ANTERIOR SE VAN A MOSTRAR CASO CONTRARIO VAN A DESAPARECER-->
+                  <app-paginator 
+                  [totalItems]="totalCitas" 
+                  [(offset)]="desde" 
+                  [pageSize]="5"
+                  (offsetChange)="cambiarPagina($event)">
+                </app-paginator>
+              </div>
+            
+            </div>
+        </div>
+    </div>
+
+</div>
+
+

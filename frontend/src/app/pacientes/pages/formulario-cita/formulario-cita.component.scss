@@ -1,0 +1,53 @@
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 10vh; /* Esto asegura que el formulario esté centrado verticalmente en la vista */
+  }
+  
+  form {
+    width: 100%;
+    max-width: 500px; /* Ajusta este valor según la anchura que prefieras para tu formulario */
+  }
+
+  .btn-primary {
+    transition: transform 0.3s ease;
+  
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .btn btn-secondary  {
+    transition: transform 0.3s ease;
+  
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .btn-margen-izquierdo {
+    margin-left: 180px; /* Ajusta este valor según necesites */
+  }
+  
+  .dia-container {
+    /* Asegura que todos los contenedores tengan la misma altura */
+    display: flex;
+    flex-direction: column;
+  
+    /* Alinea el contenido al inicio del contenedor */
+    align-items: start;
+  }
+
+  .info-especialidades {
+    background-color: #f8f9fa;  /* Un fondo suave para que destaque */
+    border-left: 4px solid #007bff; /* Una línea a la izquierda para llamar la atención */
+    padding: 10px 15px; /* Añade algo de espacio alrededor del texto */
+    margin-top: 20px; /* Margen superior para separarlo de otros elementos */
+    border-radius: 5px; /* Esquinas redondeadas para un look moderno */
+    color: #333; /* Color del texto */
+    font-weight: bold; /* Hacer el texto más visible */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sombra sutil para dar profundidad */
+  }
+  
+  

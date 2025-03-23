@@ -1,0 +1,107 @@
+
+
+<div class="row animated fadeIn fast"
+>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <p style="font-weight: bold; color: #3336ff;">Busca citas medicas por nombre del paciente o nombre del medico...</p>
+                <input type="text"
+                        class="form-control"
+                        placeholder="Buscar Citas medica..."
+                        #txtTermino
+                        (keyup)="buscar( txtTermino.value )"/>
+
+            </div>
+        </div>
+    </div>
+</div>  
+
+                    <!--BOTON DE CREAR MEDICO-->
+                    <div class="col">
+                        <div class="text-right">
+                            <a class="btn btn-primary"
+                               routerLink="/agregar-cita">
+                                <i class="fa fa-hospital-o"></i> 
+                                Crear cita Medica
+                            </a>
+                        </div>
+                    </div>
+
+         
+
+
+<div class="row animated fadeIn fast"> 
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Total de Citas medica: </h4>
+                <h6 class="card-subtitle">Citas registrados en mi aplicacion ({{totalCitas}})</h6>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                              <th style="width: 8%;">Id</th>
+                              <th style="width: 12%;">Fecha</th>
+                              <th style="width: 20%;">Paciente</th>
+                              <th style="width: 20%;">Médico</th>
+                              <th style="width: 15%;">Tipo de cita</th>
+                              <th style="width: 10%;">Estado</th>
+                              <th style="width: 10%;">Hora inicio</th>
+                              <th style="width: 10%;">Hora fin</th>
+                              <th style="width: 10%;">Acciones</th>
+                            </tr>
+                          </thead>
+                          
+                        <tbody>
+                            <tr *ngFor="let cita of citas">
+                               
+                                <th>{{ cita.idCita }}</th>
+                                <td>{{ cita.fecha | date: 'MMM d, y' }}</td>
+                                <td>{{ cita.paciente.nombre + ' ' + cita.paciente.apellidos }}</td>
+                                <td>{{ cita.medico.nombre + ' ' + cita.medico.apellidos }}</td>
+
+                                <td>{{ cita.motivo }}</td>
+
+                                <select class="form-control" [(ngModel)]="cita.estado" (change)="cambioEstado(cita)">
+                                    <option value="en_curso">En Curso</option>
+                                    <option value="terminado">Terminado</option>
+                                    <option value="no_asistio">No Asistió</option>
+                                    <option value="pagado">Pagado</option>
+                                    <option value="no_pagado">no Pagado</option>
+                                    <option value="cancelada">cancelada</option>
+                                 
+                                </select>
+                                
+                                  
+                                <td>{{ cita.hora_inicio }}</td>
+                                <td>{{ cita.hora_fin }}</td>
+                                <td class="text-nowrap text-center">
+                                    
+                                    <a data-toggle="tooltip"
+                                       data-original-title="Borrar"
+                                       class="cursor"
+                                       (click)="borrarCita(cita)">
+                                        <i class="fa fa-close text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="txtTermino.value.length === 0"> <!--SI EL TERMINO ES IGUAL A 0 LOS BOTONES SIGUIENTE Y ANTERIOR SE VAN A MOSTRAR CASO CONTRARIO VAN A DESAPARECER-->
+                    <app-paginator 
+                    [totalItems]="totalCitas" 
+                    [(offset)]="desde" 
+                    [pageSize]="5"
+                    (offsetChange)="cambiarPagina($event)">
+                  </app-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+

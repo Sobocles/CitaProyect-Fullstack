@@ -1,0 +1,46 @@
+<!-- clinic-form.component.html -->
+<div class="container mt-5">
+    <h2>Registro de Clínica</h2>
+    <form [formGroup]="clinicForm" (ngSubmit)="crearInfoClinica()">
+        <div class="form-group mb-3">
+            <label for="nombreClinica">Nombre de la Clínica</label>
+            <input type="text" class="form-control" id="nombreClinica" formControlName="nombreClinica" placeholder="Ingrese el nombre de la clínica">
+            <div *ngIf="clinicForm.get('nombreClinica')?.touched && clinicForm.get('nombreClinica')?.errors?.['required']">
+                <small class="text-danger">El nombre de la clínica es requerido.</small>
+            </div>
+        </div>
+        
+        
+        <div class="form-group mb-3">
+            <label for="direccion">Dirección</label>
+            <input type="text" class="form-control" id="direccion" formControlName="direccion" placeholder="Ingrese la dirección">
+            <div *ngIf="clinicForm.get('direccion')?.touched && clinicForm.get('direccion')?.errors?.['required']">
+                <small class="text-danger">La dirección es requerida.</small>
+            </div>
+        </div>
+        <div class="form-group mb-3">
+            <label for="telefono">Teléfono</label>
+            <input type="tel" class="form-control" id="telefono" formControlName="telefono" placeholder="Ingrese el teléfono">
+            <div *ngIf="clinicForm.get('telefono')?.touched && clinicForm.get('telefono')?.errors?.['required']">
+                <small class="text-danger">El teléfono es requerido.</small>
+            </div>
+            <div *ngIf="clinicForm.get('telefono')?.touched && clinicForm.get('telefono')?.errors?.['pattern']">
+                <small class="text-danger">El teléfono debe tener 10 dígitos.</small>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" formControlName="email" placeholder="Ingrese el email">
+            <div *ngIf="clinicForm.get('email')?.touched && clinicForm.get('email')?.errors?.['required']">
+                <small class="text-danger">El email es requerido.</small>
+            </div>
+            <div *ngIf="clinicForm.get('email')?.touched && clinicForm.get('email')?.errors?.['email']">
+                <small class="text-danger">Debe ser un email válido.</small>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar Clínica</button>
+    </form>
+</div>
+
+

@@ -1,0 +1,59 @@
+<div class="historial-container">
+    <div class="header-medico">
+        <h2 class="titulo-seccion">HISTORIAL CLÍNICO</h2>
+        <div class="sello"></div>
+    </div>
+    
+    <div *ngIf="historial" class="documento-medico">
+        <div class="encabezado">
+            <div class="id-historial">
+                <span class="badge-id">ID# {{historial.id_historial}}</span>
+                <span class="fecha-consulta">{{historial.fecha_consulta | date: 'dd/MM/yyyy'}}</span>
+            </div>
+            <div class="linea-divisoria"></div>
+        </div>
+
+        <div class="seccion-datos">
+            <div class="columna-datos">
+                <div class="campo">
+                    <label>Paciente:</label>
+                    <p class="valor">{{historial.rut_paciente}}</p>
+                </div>
+                <div class="campo">
+                    <label>Médico tratante:</label>
+                    <p class="valor">{{historial.rut_medico}}</p>
+                </div>
+            </div>
+            
+            <div class="columna-datos">
+                <div class="campo">
+                    <label>Fecha creación:</label>
+                    <p class="valor-fecha">{{historial.createdAt | date: 'dd/MM/yyyy HH:mm'}}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="seccion-clinica">
+            <h3 class="subtitulo">INFORMACIÓN CLÍNICA</h3>
+            <div class="campo-vertical">
+                <label>Diagnóstico principal:</label>
+                <div class="cuadro-texto">{{historial.diagnostico}}</div>
+            </div>
+            
+            <div class="campo-vertical">
+                <label>Medicación recetada:</label>
+                <div class="cuadro-texto">{{historial.medicamento}}</div>
+            </div>
+            
+            <div class="campo-vertical">
+                <label>Observaciones:</label>
+                <div class="cuadro-texto notas">{{historial.notas}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!historial" class="error-carga">
+        <div class="icono-error">!</div>
+        <p>No se ha encontrado el historial médico solicitado</p>
+    </div>
+</div>

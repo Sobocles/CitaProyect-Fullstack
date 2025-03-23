@@ -1,0 +1,76 @@
+
+
+<div class="row animated fadeIn fast"
+>
+
+</div> 
+
+
+
+
+<div class="row" 
+>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">      
+                
+                <div class="row">
+                    <div class="col-8">
+           
+                    </div>
+                    <!--BOTON DE CREAR MEDICO-->
+                    <div class="col">
+                        <div class="text-right">
+                            <a class="btn btn-primary"
+                               routerLink="/agregar-info-clinica">
+                                <i class="fa fa-hospital-o"></i> 
+                                Ingresar datos de su clinica
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Id</th>
+                          <th>Nombre Clinica</th>
+                          <th>Direccion</th>
+                          <th>Teléfono</th>
+                          <th>Email</th>
+                          <th>Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <!-- Asegúrate de que infoClinica está definido antes de intentar acceder a sus propiedades -->
+                        <tr *ngIf="infoClinica">
+                          <td>{{ infoClinica.id }}</td>
+                          <td>{{ infoClinica.nombreClinica }}</td>
+                          <td>{{ infoClinica.direccion }}</td>
+                          <td>{{ infoClinica.telefono }}</td>
+                          <td>{{ infoClinica.email }}</td>
+                          <td>
+                            <div class="icon-container icon-delete">
+                              <a class="cursor"
+                                data-toggle="tooltip" 
+                                data-original-title="Borrar"
+                                (click)="borrarInfoClinica( infoClinica.id )"> 
+                                <i class="fa fa-close text-danger"></i> 
+                              </a>
+                            </div>
+
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                
+           
+            </div>
+        </div>
+    </div>
+
+</div>
+

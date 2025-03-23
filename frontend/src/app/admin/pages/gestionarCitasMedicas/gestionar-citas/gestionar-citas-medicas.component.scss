@@ -1,0 +1,18 @@
+.cursor {
+    cursor: pointer;
+}
+
+/* Fuerza un layout fijo en la tabla */
+table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  /* Evita que el contenido se desborde y agrega puntos suspensivos */
+  table th,
+  table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  

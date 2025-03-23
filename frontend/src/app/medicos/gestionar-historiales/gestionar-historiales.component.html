@@ -1,0 +1,99 @@
+<div class="row animated fadeIn fast">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <input type="text"
+                        class="form-control"
+                        placeholder="Buscar historial..."
+                        #txtTermino
+                        (keyup)="buscar( txtTermino.value )"/> 
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <!-- Contenido principal aquí -->
+      </div>
+      <div class="col-auto">
+        <a routerLink="/agregar-historial" class="btn btn-primary">Agregar historial</a>
+      </div>
+    </div>
+  </div>
+
+<div class="row animated fadeIn fast"> <!--SI NO ESTA CARGADO-->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Historiales medicos escritos </h4>
+                <h6 class="card-subtitle">Historiales registrados en mi aplicacion ({{this.totalHistoriales}})</h6>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+         
+                          <th>ID </th>
+                          <th>Diagnostico</th>
+                          <th>Medicamento</th>
+                          <th>notas</th>
+                          <th>Fecha de consulta</th>
+                          <th>Paciente</th>
+                          <th>Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let historial of historiales">
+                          <td>{{historial.id_historial}}</td>
+                          <td>{{historial.diagnostico}}</td>
+                          <td>{{historial.medicamento}}</td>
+                          <td>{{historial.notas}}</td>                  
+                          <td>{{ historial.fecha_consulta | date: 'MMM d, y' }}</td>
+
+                          <td>{{historial.paciente.nombre}} {{historial.paciente.apellidos}}</td>
+                          
+
+                          <td>
+                            <div class="icon-container d-flex">
+                              <a class="cursor mr-2"
+                                 data-toggle="tooltip" 
+                                 data-original-title="Editar"
+                                 (click)="editarHistorial( historial )"> 
+                                <i class="fa fa-pencil text-primary"></i> 
+                              </a>
+                              <a class="cursor"
+                                 data-toggle="tooltip" 
+                                 data-original-title="Borrar"
+                                 (click)="borrarHistorial( historial )"> 
+                                <i class="fa fa-close text-danger"></i> 
+                              </a>
+                            </div>
+                          </td>
+                          
+                
+                
+                
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                <!--ESTA CONDICION SE HACE PARA QUE CUANDO SE TECLEA EN LA BARRA DE BUSQUEDA Y SE CARGAN LOS RESULTADOS DE BUSQUEDA DESAPARESCAN LOS BOTONES SIGUIENTES Y ANTERIOR EN LA PANTALLA-->
+                <div *ngIf="txtTermino.value.length === 0"> <!--SI EL TERMINO ES IGUAL A 0 LOS BOTONES SIGUIENTE Y ANTERIOR SE VAN A MOSTRAR CASO CONTRARIO VAN A DESAPARECER-->
+                  <app-paginator 
+                  [totalItems]="totalHistoriales" 
+                  [(offset)]="desde" 
+                  [pageSize]="5"
+                  (offsetChange)="cambiarPagina($event)">
+                </app-paginator>
+              </div>
+
+            
+            </div>
+        </div>
+    </div>
+
+</div>
+

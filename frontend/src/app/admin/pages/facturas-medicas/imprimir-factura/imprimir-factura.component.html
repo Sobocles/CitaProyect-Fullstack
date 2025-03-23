@@ -1,0 +1,22 @@
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            Detalles de la Factura
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Factura Nº {{ factura?.idFactura }}</h5>
+            <p class="card-text"><strong>Fecha de Pago:</strong> {{ factura?.fecha_pago | date }}</p>
+            <p class="card-text"><strong>Método de Pago:</strong> {{ factura?.paymentMethodId }}</p>
+            <p class="card-text"><strong>Monto Pagado:</strong> ${{ factura?.montoPagado | number }}</p>
+            <p class="card-text"><strong>Paciente:</strong> {{ factura?.nombrePaciente }} {{ factura?.apellidosPaciente }}</p>
+            <p class="card-text"><strong>RUT del Paciente:</strong> {{ factura?.rutPaciente }}</p>
+            <p class="card-text"><strong>Médico:</strong> {{ factura?.nombreMedico }} {{ factura?.apellidosMedico }}</p>
+            <p class="card-text"><strong>RUT del Médico:</strong> {{ factura?.rutMedico }}</p>
+            <p class="card-text"><strong>Motivo de la Cita:</strong> {{ factura?.motivoCita }}</p>
+   
+        </div>
+    </div>
+    <div class="mt-4">
+        <button class="btn btn-primary" onclick="window.print();">Imprimir Factura</button>
+    </div>
+</div>

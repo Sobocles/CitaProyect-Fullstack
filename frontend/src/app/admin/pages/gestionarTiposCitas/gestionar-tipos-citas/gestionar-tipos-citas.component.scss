@@ -1,0 +1,21 @@
+.cursor {
+    cursor: pointer;
+}
+
+.icon-container {
+    display: inline-block;
+    margin-right: 10px;  /* Esto añade un pequeño espacio entre los íconos */
+}
+
+.table {
+    width: 100%;
+    table-layout: fixed; /* Forza anchos fijos en las columnas */
+  }
+  
+  .table th,
+  .table td {
+    white-space: nowrap;       /* Evita que el texto se divida en varias líneas */
+    overflow: hidden;          /* Oculta el contenido que se desborda */
+    text-overflow: ellipsis;   /* Muestra "..." si el contenido es muy largo */
+  }
+  

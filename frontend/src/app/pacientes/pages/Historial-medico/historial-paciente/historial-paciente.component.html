@@ -1,0 +1,89 @@
+<div class="row animated fadeIn fast">
+  <div class="col-12">
+      <div class="card shadow-sm border-0" style="border-radius: 15px;">
+          <div class="card-header bg-primary text-white rounded-top">
+              <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                      <h4 class="card-title mb-0"><i class="fas fa-file-medical me-2"></i>Registro Clínico Digital</h4>
+                      <small class="card-subtitle">Sistema de Archivos Médicos Electrónicos (EMR v2.4)</small>
+                  </div>
+                  <div class="badge bg-light text-primary fs-6">
+                      <i class="fas fa-dna me-2"></i>Casos Registrados: {{totalHistoriales}}
+                  </div>
+              </div>
+          </div>
+          
+          <div class="card-body medical-table-container">
+              <div class="table-responsive">
+                  <table class="table table-hover table-medical">
+                      <thead class="medical-head">
+                          <tr>
+                              <th><i class="fas fa-id-badge medical-icon"></i> ID Caso</th>
+                              <th><i class="fas fa-diagnoses medical-icon"></i> Diagnóstico</th>
+                              <th><i class="fas fa-prescription-bottle medical-icon"></i> Terapia</th>
+                              <th><i class="fas fa-notes-medical medical-icon"></i> Observaciones</th>
+                              <th><i class="fas fa-user-md medical-icon"></i> Especialista</th>
+                              <th><i class="fas fa-calendar-check medical-icon"></i> Fecha Consulta</th>
+                              <th><i class="fas fa-microscope medical-icon"></i> Análisis</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr *ngFor="let historial of historialMedico" class="medical-row">
+                              <td class="fw-bold text-primary">CASO-{{historial.id_historial}}</td>
+                              <td>
+                                  <div class="diagnosis-tag">
+                                      {{historial.diagnostico}}
+                                  </div>
+                              </td>
+                              <td>
+                                  <span class="medication-badge">
+                                      <i class="fas fa-capsules me-2"></i>
+                                      {{historial.medicamento}}
+                                  </span>
+                              </td>
+                              <td class="notes-cell">
+                                  <div class="notes-content">
+                                      {{historial.notas}}
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="doctor-info">
+                                      <div class="doctor-name">{{historial.medico.nombre}} {{historial.medico.apellidos}}</div>
+                               
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="date-box">
+                                      <div class="date-day">{{ historial.fecha_consulta | date: 'd' }}</div>
+                                      <div class="date-month">{{ historial.fecha_consulta | date: 'MMM' }}</div>
+                                      <div class="date-year">{{ historial.fecha_consulta | date: 'y' }}</div>
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="icon-container d-flex">
+                                      <a class="medical-action" 
+                                         data-toggle="tooltip"
+                                         data-original-title="Examinar Detalles"
+                                         [routerLink]="['/ver-historial-paciente', historial.id_historial]">
+                                          <i class="fas fa-clipboard-list medical-icon-detail"></i>
+                                      </a>
+                                  </div>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+
+              <app-paginator 
+                  [totalItems]="totalHistoriales" 
+                  [(offset)]="desde" 
+                  [pageSize]="5"
+                  (offsetChange)="cambiarPagina($event)">
+              </app-paginator>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+

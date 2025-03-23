@@ -1,0 +1,74 @@
+<div class="container mt-4">
+  <button class="btn btn-outline-primary mb-4" (click)="volverAtras()">
+    <i class="bi bi-arrow-left me-2"></i>Volver
+  </button>
+
+  <div class="card shadow border-0">
+    <div class="card-body p-4">
+      <h2 class="text-center mb-4 text-primary">Programar cita médica</h2>
+      
+      <!-- Formulario -->
+      <form [formGroup]="form" (ngSubmit)="enviarFormulario()">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-6">
+            <label for="especialidad" class="form-label fw-bold">Especialidad médica</label>
+            <select class="form-select" formControlName="especialidad" id="especialidad">
+              <option value="" disabled selected>Seleccione una especialidad...</option>
+              <option *ngFor="let tipo of tiposCitas" [value]="tipo.especialidad_medica">
+                {{ tipo.especialidad_medica }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label for="fecha" class="form-label fw-bold">Fecha deseada</label>
+            <input type="date" class="form-control" id="fecha" formControlName="fecha"
+                   >
+          </div>
+
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100" [disabled]="!form.valid">
+              <i class="bi bi-search me-2"></i>Buscar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Info Box -->
+  <div class="alert alert-info mt-4 shadow-sm">
+    <i class="bi bi-info-circle me-2"></i>
+    Consulta las especialidades disponibles por día y selecciona una fecha en el calendario 
+    donde la especialidad que necesitas esté disponible.
+  </div>
+
+  <!-- Días y especialidades -->
+  <div class="row g-4 mt-2">
+    <div class="col-12">
+      <h4 class="mb-3 text-secondary">Disponibilidad por día</h4>
+      <div class="row g-3">
+        <div class="col-md-3 col-sm-6" *ngFor="let dia of ordenDias">
+          <div class="card h-100 border-start-4 border-primary shadow-sm hover-shadow">
+            <div class="card-body">
+              <h5 class="card-title text-primary">
+                <i class="bi bi-calendar-event me-2"></i>{{ dia | titlecase }}
+              </h5>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex align-items-center" 
+                    *ngFor="let especialidad of horariosEspecialidades[dia]">
+                  <i class="bi bi-check2-circle text-success me-2"></i>
+                  {{ especialidad }}
+                </li>
+                <li class="list-group-item text-muted small" 
+                    *ngIf="!horariosEspecialidades[dia]?.length">
+                  No hay especialidades este día
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

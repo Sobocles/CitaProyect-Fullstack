@@ -1,0 +1,43 @@
+<div class="container mt-4">
+    <div class="row">
+        <!-- Botón para agendar cita -->
+        <div class="col-12 text-center mb-4">
+            <button class="btn btn-primary btn-lg" routerLink="/formulario-cita">Agendar Cita Médica</button>
+        </div>
+        
+        <div class="container mt-4">
+            <div class="row">
+                <!-- Sección de horarios de la clínica -->
+                <div class="col-md-6">
+                    <h2 class="text-center mb-4">Horario de la Clínica</h2>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <div *ngFor="let horario of horarioClinicas" class="card horario-card m-2">
+                            <div class="card-body text-center" [ngClass]="{'abierto': horario.estado === 'abierto', 'cerrado': horario.estado === 'cerrado'}">
+                                <h5 class="card-title">{{ horario.dia.charAt(0).toUpperCase() + horario.dia.slice(1) }}</h5>
+                                <p class="card-text">
+                                    <span *ngIf="horario.estado === 'abierto'">
+                                        {{ horario.horarioApertura }} - {{ horario.horarioCierre }}
+                                    </span>
+                                    <span *ngIf="horario.estado === 'cerrado'">
+                                        Cerrado
+                                    </span>
+                                </p>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Sección de información de la clínica -->
+                <div class="col-md-6" *ngIf="infoClinica">
+                    <div class="info-clinica bg-light p-4 rounded shadow">
+                        <h2 class="text-center mb-4">Información de la Clínica</h2>
+                        <p><strong>Nombre:</strong> {{ infoClinica.nombreClinica }}</p>
+                        <p><strong>Dirección:</strong> {{ infoClinica.direccion }}</p>
+                        <p><strong>Teléfono:</strong> {{ infoClinica.telefono }}</p>
+                        <p><strong>Email:</strong> {{ infoClinica.email }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        

@@ -1,0 +1,9 @@
+<!-- paginator.component.html -->
+<div class="paginator">
+    <button class="btn btn-secondary" (click)="changePage(-pageSize)">Anteriores</button>
+    <span>
+      Página: {{ (offset / pageSize) + 1 }} de {{ totalItems ? Math.ceil(totalItems / pageSize) : 1 }}
+    </span>
+    <button class="btn btn-secondary" (click)="changePage(pageSize)">Siguiente</button>
+  </div>
+  

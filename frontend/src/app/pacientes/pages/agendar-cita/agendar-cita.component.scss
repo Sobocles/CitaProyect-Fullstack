@@ -1,0 +1,38 @@
+
+
+.custom-day {
+    border: 1px solid #007BFF;  /* Color del borde azul (puedes cambiarlo según tus preferencias) */
+    transition: background-color 0.3s, transform 0.3s;  /* Efectos suaves al pasar el mouse */
+
+    /* Puedes agregar más estilos aquí si lo consideras necesario */
+}
+
+.custom-day:hover {
+    background-color: #1d446b;  /* Color de fondo al pasar el mouse */
+    transform: scale(1.05);  /* Efecto de "zoom" al pasar el mouse */
+}
+
+.full-calendar-container {
+    height: 600px; // Ajusta la altura según sea necesario
+  }
+
+  .abierto {
+    background-color: green;
+    color: white;
+}
+
+.cerrado {
+    background-color: red;
+    color: white;
+}
+
+.btn-primary.btn-lg {
+    transition: transform 0.3s ease;
+}
+
+.btn-primary.btn-lg:hover {
+    transform: scale(1.1);
+}
+
+
+

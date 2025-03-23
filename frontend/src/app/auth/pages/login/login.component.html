@@ -1,0 +1,27 @@
+<form [formGroup]="miFormulario" (ngSubmit)="login()">
+  <div class="flex flex-column">
+    <span class="text-lg mb-4">Login</span>
+
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input type="text" matInput formControlName="email" placeholder="email de usuario">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Contraseña</mat-label>
+      <input type="password" matInput formControlName="password" placeholder="Contraseña">
+    </mat-form-field>
+
+    <button mat-button mat-flat-button color="primary" type="submit">
+      <mat-icon>save</mat-icon>
+      Ingresar
+    </button>
+
+    <div class="flex justify-content-end mt-5">
+      <a routerLink="/auth/register">Crear cuenta</a>
+    </div>
+    <div class="flex justify-content-end mt-1">
+      <a routerLink="/auth/recuperarPassword">¿Olvidaste contraseña?</a>
+    </div>
+  </div>
+</form>

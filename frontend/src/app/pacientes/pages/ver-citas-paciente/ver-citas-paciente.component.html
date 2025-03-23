@@ -1,0 +1,76 @@
+<div class="citas-container">
+  <div class="header-citas">
+      <div class="search-container">
+          <div class="search-bar">
+              <input type="text" 
+                     class="medical-search"
+                     placeholder="Buscar por motivo, médico o fecha..."
+                     #txtTermino
+                     (keyup)="buscar(txtTermino.value)">
+              <i class="fas fa-search-medical"></i>
+          </div>
+      </div>
+      
+      <div class="resumen-citas">
+          <h2 class="titulo-citas">
+              Agenda Médica
+              <span class="badge-total">{{totalCitas}} citas</span>
+          </h2>
+          <p class="subtitulo-citas">Registro de consultas programadas</p>
+      </div>
+  </div>
+
+  <div *ngIf="citasMedicas.length > 0" class="listado-citas">
+      <div *ngFor="let cita of citasMedicas" class="cita-card">
+
+          
+          <div class="cita-body">
+              <div class="cita-info">
+                  <div class="info-item">
+                      <i class="fas fa-stethoscope"></i>
+                      <div>
+                          <label>Motivo</label>
+                          <p class="motivo">{{cita.motivo}}</p>
+                      </div>
+                  </div>
+                  
+                  <div class="info-item">
+                      <i class="fas fa-calendar-check"></i>
+                      <div>
+                          <label>Fecha y Hora</label>
+                          <p class="horario">
+                              {{cita.fecha | date: 'dd/MM/yyyy'}} 
+                              <span class="hora">{{cita.hora_inicio}} - {{cita.hora_fin}}</span>
+                          </p>
+                      </div>
+                  </div>
+                  
+                  <div class="info-item">
+                      <i class="fas fa-user-md"></i>
+                      <div>
+                          <label>Médico</label>
+                          <p class="medico">{{cita.medico.nombre}} {{cita.medico.apellidos}}</p>
+                      </div>
+                  </div>
+              </div>
+              
+
+          </div>
+      </div>
+  </div>
+
+  <div *ngIf="citasMedicas.length === 0" class="sin-citas">
+      <div class="empty-state">
+          <i class="fas fa-calendar-times"></i>
+          <p>No se encontraron citas programadas</p>
+      </div>
+  </div>
+
+  <app-paginator 
+      class="medical-paginator"
+      [totalItems]="totalCitas" 
+      [(offset)]="desde" 
+      [pageSize]="5"
+      (offsetChange)="cargarCitasMedicas(authService.usuario!.rut, $event)">
+  </app-paginator>
+</div>

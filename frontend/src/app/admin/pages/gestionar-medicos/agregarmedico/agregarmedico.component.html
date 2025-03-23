@@ -1,0 +1,110 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h2 class="text-center mb-4">
+        {{ isEditMode ? 'Editar Médico' : 'Formulario de Registro de Médicos' }}
+      </h2>
+      <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+        <!-- Campo RUT -->
+        <div class="form-group col-12 col-md-6">
+          <label for="rut">Rut</label>
+          <input type="text" class="form-control" id="rut" formControlName="rut" placeholder="rut">
+          <div *ngIf="formulario.controls['rut'].touched && formulario.controls['rut'].errors?.['required']" class="text-danger">
+            Este campo es obligatorio.
+          </div>
+          <div *ngIf="formulario.controls['rut'].errors?.['rutInvalid']" class="text-danger">
+            RUT no válido.
+          </div>
+        </div>
+        <!-- Campo Nombre -->
+        <div class="form-group col-12 col-md-6">
+          <label for="nombre">Nombre</label>
+          <input type="text" class="form-control" id="nombre" formControlName="nombre" placeholder="Nombre">
+          <div *ngIf="formulario.controls['nombre'].touched && formulario.controls['nombre'].errors?.['required']" class="text-danger">
+            Este campo es obligatorio.
+          </div>
+        </div>
+        <!-- Campo Apellidos -->
+        <div class="form-group col-12 col-md-6">
+          <label for="apellidos">Apellidos</label>
+          <input type="text" class="form-control" id="apellidos" formControlName="apellidos" placeholder="Apellidos">
+          <div *ngIf="formulario.controls['apellidos'].touched && formulario.controls['apellidos'].errors?.['required']" class="text-danger">
+            Este campo es obligatorio.
+          </div>
+        </div>
+        <!-- Campo Email -->
+        <div class="form-group col-12 col-md-6">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" formControlName="email" placeholder="Email">
+          <div *ngIf="formulario.get('email')?.hasError('required') && formulario.get('email')?.touched" class="text-danger">
+            El email es requerido.
+          </div>
+          <div *ngIf="formulario.get('email')?.hasError('email') && formulario.get('email')?.touched" class="text-danger">
+            El email no es válido.
+          </div>
+          <div *ngIf="formulario.get('email')?.hasError('notGmail') && formulario.get('email')?.touched" class="text-danger">
+            Solo se permiten direcciones de email de Gmail.
+          </div>
+        </div>
+        <!-- Campo Teléfono -->
+        <div class="form-group col-12 col-md-6">
+          <label for="telefono">Teléfono</label>
+          <input type="tel" class="form-control" id="telefono" formControlName="telefono" placeholder="Teléfono">
+          <div *ngIf="formulario.controls['telefono'].touched && formulario.controls['telefono'].errors?.['required']" class="text-danger">
+            Este campo es obligatorio.
+          </div>
+          <div *ngIf="formulario.controls['telefono'].touched && formulario.controls['telefono'].errors?.['telefonoInvalido']" class="text-danger">
+            Formato de teléfono inválido. Debe ser +56 9 XXXX-XXXX.
+          </div>
+        </div>
+        <!-- Campo Dirección -->
+        <div class="form-group col-12 col-md-6">
+          <label for="direccion">Dirección</label>
+          <input type="text" class="form-control" id="direccion" formControlName="direccion" placeholder="Dirección">
+          <div *ngIf="formulario.controls['direccion'].touched && formulario.controls['direccion'].errors?.['required']" class="text-danger">
+            Este campo es obligatorio.
+          </div>
+          <div *ngIf="formulario.controls['direccion'].touched && formulario.controls['direccion'].errors?.['maxlength']" class="text-danger">
+            La dirección no puede exceder los 66 caracteres.
+          </div>
+        </div>
+        <!-- Campo Nacionalidad -->
+        <div class="form-group col-12 col-md-6">
+          <label for="nacionalidad">Nacionalidad</label>
+          <input type="text" class="form-control" id="nacionalidad" formControlName="nacionalidad" placeholder="Nacionalidad">
+          <div *ngIf="formulario.controls['nacionalidad'].touched && formulario.controls['nacionalidad'].errors?.['required']" class="text-danger">
+            Este campo es obligatorio.
+          </div>
+        </div>
+        <!-- Campo Contraseña: solo se muestra en modo agregar -->
+        <div class="form-group col-12 col-md-6" *ngIf="!isEditMode">
+          <label for="password">Contraseña</label>
+          <input type="password" class="form-control" id="password" formControlName="password" placeholder="Contraseña">
+          <div *ngIf="formulario.controls['password'].touched && formulario.controls['password'].errors?.['required']" class="text-danger">
+            Este campo es obligatorio.
+          </div>
+          <div *ngIf="formulario.controls['password'].errors?.['passwordStrength']" class="text-danger">
+            La contraseña debe incluir mayúsculas, números y caracteres especiales.
+          </div>
+        </div>
+        <!-- Campo Especialidad -->
+        <div class="form-group col-12 col-md-6">
+          <label for="especialidad_medica">Especialidad</label>
+          <select class="form-control" id="especialidad_medica" formControlName="especialidad_medica">
+            <option value="" disabled selected>Seleccione especialidad</option>
+            <option *ngFor="let especialidad of especialidades" [value]="especialidad">
+              {{ especialidad }}
+            </option>
+          </select>
+          <div *ngIf="formulario.controls['especialidad_medica'].touched && formulario.controls['especialidad_medica'].errors?.['required']" class="text-danger">
+            La selección de la especialidad es obligatoria.
+          </div>
+        </div>
+        <!-- Botón de envío -->
+        <button type="submit" class="btn btn-primary btn-block">
+          {{ isEditMode ? 'Modificar Médico' : 'Registrar Médicos' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

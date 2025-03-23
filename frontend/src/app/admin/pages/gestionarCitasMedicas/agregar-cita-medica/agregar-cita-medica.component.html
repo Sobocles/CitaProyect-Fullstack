@@ -1,0 +1,58 @@
+
+<div class="alert alert-warning" role="alert">
+  Si no tienes médicos registrados en la aplicación o no sabes qué días trabajan tus médicos 
+  <button class="btn btn-info" (click)="irAGestionarHorarios()">Revisa los horarios aquí</button>
+</div>
+
+
+<form (ngSubmit)="guardarCita()">
+
+  <!-- Motivo de la cita -->
+
+
+ <!-- Paciente -->
+ <div class="form-group mb-3">
+  <label for="paciente">Paciente</label>
+  <select class="form-control" id="paciente" [(ngModel)]="selectedPaciente" name="paciente">
+    <option value="" disabled>Seleccione un paciente</option>
+    <option *ngFor="let paciente of pacientes" [value]="paciente.rut">{{ paciente.nombre }} {{ paciente.apellidos }}</option>
+  </select>
+</div>
+
+<!-- Especialidad Médica -->
+<div class="form-group mb-3">
+  <label for="especialidad">Especialidad</label>
+  <select class="form-control" id="especialidad" [(ngModel)]="selectedEspecialidad" (change)="onChangeData()" name="especialidad">
+    <option value="" disabled selected>Seleccione una especialidad</option>
+    <option *ngFor="let especialidad of especialidades" [value]="especialidad.especialidad_medica">{{ especialidad.especialidad_medica }}</option>
+  </select>
+</div>
+
+  
+<div class="form-group mb-3">
+  <label for="fecha">Fecha de cita</label>
+  <input type="date" class="form-control" id="fecha" [(ngModel)]="selectedDate" (change)="onChangeData()" name="fecha">
+</div>
+
+  
+<div class="form-group mb-3" *ngIf="medicosDisponibles && medicosDisponibles.length">
+  <label for="medico">Médicos disponibles</label>
+  <select class="form-control" id="medico" [(ngModel)]="selectedMedico" name="medico" (change)="onMedicoSelected($event)">
+    <option *ngFor="let medico of medicosDisponibles" [ngValue]="medico">{{ medico.medicoNombre }} {{ medico.idTipoCita }}  ({{ medico.hora_inicio }} - {{ medico.hora_fin }})</option>
+  </select>
+  
+</div>
+<div *ngIf="selectedMedico && selectedMedico.rutMedico">
+  
+  <p>Nombre del Médico: {{ selectedMedico.medicoNombre }}</p>
+  <p>Horario: {{ selectedMedico.hora_inicio }} - {{ selectedMedico.hora_fin }}</p>
+ 
+</div>
+
+
+<button type="submit" class="btn btn-primary" [disabled]="!formularioValido()">Guardar Cita</button>
+
+
+
+
+</form>

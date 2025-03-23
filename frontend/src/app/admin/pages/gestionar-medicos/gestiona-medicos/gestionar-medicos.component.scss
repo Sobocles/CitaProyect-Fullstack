@@ -1,0 +1,31 @@
+.icon-container {
+    display: inline-block; /* Alinea los elementos en línea */
+    vertical-align: middle; /* Ajusta la alineación vertical según tus preferencias */
+    margin-right: 10px; /* Puedes ajustar el margen según tus preferencias */
+  }
+
+  .cursor {
+    cursor: pointer;
+}
+
+.icon-delete {
+  margin-right: 15px; /* o el valor que desees para la separación */
+}
+
+table {
+  width: 100%;
+  table-layout: fixed; /* Fuerza un ancho fijo para todas las columnas */
+}
+
+table th,
+table td {
+  white-space: nowrap;      /* Evita que el texto se rompa en varias líneas */
+  overflow: hidden;        
+  text-overflow: ellipsis;  
+}
+
+
+
+
+
+

@@ -1,0 +1,136 @@
+
+
+<div class="row animated fadeIn fast"
+>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+              <p style="font-weight: bold; color: #3336ff;">Buscar usuarios por nombre...</p>
+
+                <input type="text"
+                        class="form-control"
+                        placeholder="Buscar Usuario..."
+                        #txtTermino
+                        (keyup)="buscar( txtTermino.value )"/>
+
+            </div>
+        </div>
+    </div>
+</div> 
+
+
+
+
+<div class="row" 
+>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">      
+                
+                <div class="row">
+                    <div class="col-8">
+                        <h4 class="card-title">Paciente ({{ totalUsuarios }})</h4>
+                        <h6 class="card-subtitle">
+                            Pacientes registrados en mi aplicación
+                        </h6>
+                    </div>
+                    <!--BOTON DE CREAR MEDICO-->
+                    <div class="col">
+                        <div class="text-right">
+                            <a class="btn btn-primary"
+                               routerLink="/agregar-paciente">
+                                <i class="fa fa-hospital-o"></i> 
+                                Crear Paciente
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="table-responsive">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th style="width: 15%;">ID</th>
+                        <th style="width: 10%;">Nombre</th>
+                        <th style="width: 15%;">Apellidos</th>
+                        <th style="width: 15%;">Email</th>
+                        <th style="width: 15%;">Teléfono</th>
+          
+                        <th style="width: 5%;">Rol</th>
+                        
+                        <th style="width: 5%;">Acciones</th>
+                      
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--
+                        export interface Paciente {
+                        rut: string;
+                        nombre: string;
+                        apellidos: string;
+                        email: string;
+                        password?: string;
+                        fecha_nacimiento: string;
+                        telefono: string;
+                        direccion: string;
+                    }
+
+                      -->
+                      <tr *ngFor="let paciente of pacientes">
+                        <td>{{ paciente.rut }}</td>
+                        <td>{{ paciente.nombre }}</td>
+                        <td>{{ paciente.apellidos }}</td>
+                        <td>{{ paciente.email }}</td>
+                        
+                        <td>{{ paciente.telefono }}</td>
+                
+                        <td>
+                            <select class="form-control"
+                            [(ngModel)]="paciente.rol"
+                            (change)="cambiarRole( paciente )">
+                              <option value="ADMIN_ROLE">Admin</option>
+                              <option value="USER_ROLE">User</option>
+                            </select>
+                        </td>
+                        
+               
+                        <td>
+                          <div class="icon-container">
+                              <a class="cursor"
+                                 data-toggle="tooltip" 
+                                 data-original-title="Borrar"
+                                 (click)="borrarPaciente( paciente )"> 
+                                 <i class="fa fa-close text-danger"></i> 
+                              </a>
+                          </div>
+                          <div class="icon-container">
+                              <a class="cursor"
+                                 data-toggle="tooltip" 
+                                 data-original-title="Editar"
+                                 (click)="editarUsuario( paciente )"> 
+                                 <i class="fa fa-pencil text-primary"></i> 
+                              </a>
+                          </div>
+                      </td>
+                      
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+                
+                <div *ngIf="txtTermino.value.length === 0"> <!--SI EL TERMINO ES IGUAL A 0 LOS BOTONES SIGUIENTE Y ANTERIOR SE VAN A MOSTRAR CASO CONTRARIO VAN A DESAPARECER-->
+                  <app-paginator 
+                  [totalItems]="totalUsuarios" 
+                  [(offset)]="desde" 
+                  [pageSize]="5"
+                  (offsetChange)="cambiarPagina($event)">
+                </app-paginator>
+              </div>
+            </div>
+        </div>
+    </div>
+
+</div>

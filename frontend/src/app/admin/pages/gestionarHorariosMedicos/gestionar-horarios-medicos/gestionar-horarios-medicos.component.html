@@ -1,0 +1,127 @@
+<div class="row animated fadeIn fast">
+  <div class="col-12">
+      <div class="card">
+          <div class="card-body">
+            <div class="alert alert-warning" role="alert">
+              Si ya tienes horarios con médicos registrados puedes crear una cita médica
+              <button class="btn btn-info" (click)="redirigirACrearCita()"> Aquí</button>
+            </div>
+            
+
+              <!-- Mensaje destacado encima de la barra de búsqueda -->
+              <p style="font-weight: bold; color: #3336ff;">Buscar horarios medicos por dia de trabajo ejemplo: lunes, martes, miercoles.....</p>
+
+              <input type="text"
+                     class="form-control"
+                     placeholder="Buscar medicos por dia de trabajo ejemplo: lunes, martes, miercoles....."
+                     #txtTermino
+                     (keyup)="buscar( txtTermino.value )"/>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <!-- Contenido principal aquí -->
+      </div>
+      <div class="col-auto">
+        <a routerLink="/agregar-horario-medico" class="btn btn-primary">Agregar Horario</a>
+      </div>
+    </div>
+  </div>
+<!--
+    export interface HorarioMedico {
+    idHorario?: number; // El signo de interrogación indica que es opcional, ya que se autoincrementa en la base de datos
+    diaSemana: string;
+    horaInicio: string;
+    horaFinalizacion: string;
+    hora_inicio_colacion?: string;
+    hora_fin_colacion?: string;
+    duracionCitas: number;
+    rutMedico: string;
+    disponibilidad: boolean;
+    fechaCreacion?: Date; // Se asumirá que el servidor establecerá la fecha de creación automáticamente
+  }
+-->
+<div class="row animated fadeIn fast"> <!--SI NO ESTA CARGADO-->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Horarios: ({{totalHorarios}}) </h4>
+                <h6 class="card-subtitle">Horarios registrados en mi aplicacion</h6>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th style="width: 12%;">diaSemana</th>
+                          <th style="width: 15%;">hora Inicio</th>
+                          <th style="width: 15%;">hora Finalizacion</th>
+                          <th style="width: 12%;">Inicio colacion</th>
+                          <th style="width: 12%;">Fin colacion</th>
+                          <th style="width: 18%;">Nombre medico</th>
+                          <th style="width: 12%;">Especialidad</th>
+                          <th style="width: 10%;">Acciones</th>
+                        </tr>
+                      </thead>
+                      
+                      <tbody>
+                        <tr *ngFor="let horario of horarios">
+                          <td>{{ horario.diaSemana }}</td>
+                          <td>{{ horario.horaInicio }}</td>
+                          <td>{{ horario.horaFinalizacion }}</td>
+                          <td>{{ horario.inicio_colacion }}</td>
+                          <td>{{ horario.fin_colacion }}</td>
+                          <td>{{ horario.medico.nombre + ' ' + horario.medico.apellidos }}</td>
+
+                          <td>{{ horario.medico.especialidad_medica }}</td>
+                          
+                          
+                   
+  
+              <!--BOTON PARA BORRAR MEDICO-->
+              <td>
+                <div class="icon-container">
+                  <a class="cursor"
+                    data-toggle="tooltip" 
+                    data-original-title="Borrar"
+                    (click)="borrarHorario( horario )"> 
+                    <i class="fa fa-close text-danger"></i> 
+                  </a>
+                </div>
+              <div class="icon-container">
+                  <a class="cursor"
+                    data-toggle="tooltip" 
+                    data-original-title="Editar"
+                    (click)="editarHorario( horario )"> 
+                    <i class="fa fa-pencil text-primary"></i> 
+                  </a>
+                 
+                </div> 
+                </td>
+                
+                
+                
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+             
+                <div *ngIf="txtTermino.value.length === 0">
+                  <app-paginator 
+                  [totalItems]="totalHorarios" 
+                  [(offset)]="desde" 
+                  [pageSize]="5"
+                  (offsetChange)="cambiarPagina($event)">
+                </app-paginator>
+              </div>
+            
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
