@@ -69,7 +69,7 @@ console.log('Día de la semana calculado:', diaSemana);
                 msg: 'No se encontró el tipo de cita'
             });
         }
-        const idTipoCita = tipoCitaEncontrado.idTipo
+        const idTipoCita = tipoCitaEncontrado.idTipoCita
   
         const horarios_medico = await buscarHorarioMedico(tipoCitaEncontrado, diaSemana);
         console.log('Aqui estan los horarios del medico',horarios_medico);

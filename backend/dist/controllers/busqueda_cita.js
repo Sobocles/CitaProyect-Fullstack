@@ -60,7 +60,7 @@ const buscarmedico = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 msg: 'No se encontró el tipo de cita'
             });
         }
-        const idTipoCita = tipoCitaEncontrado.idTipo;
+        const idTipoCita = tipoCitaEncontrado.idTipoCita;
         const horarios_medico = yield buscarHorarioMedico(tipoCitaEncontrado, diaSemana);
         console.log('Aqui estan los horarios del medico', horarios_medico);
         for (let horario of horarios_medico) {
