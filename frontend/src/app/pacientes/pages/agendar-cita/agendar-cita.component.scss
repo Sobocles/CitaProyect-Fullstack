@@ -1,38 +1,196 @@
-
-
-.custom-day {
-    border: 1px solid #007BFF;  /* Color del borde azul (puedes cambiarlo según tus preferencias) */
-    transition: background-color 0.3s, transform 0.3s;  /* Efectos suaves al pasar el mouse */
-
-    /* Puedes agregar más estilos aquí si lo consideras necesario */
-}
-
-.custom-day:hover {
-    background-color: #1d446b;  /* Color de fondo al pasar el mouse */
-    transform: scale(1.05);  /* Efecto de "zoom" al pasar el mouse */
-}
-
-.full-calendar-container {
-    height: 600px; // Ajusta la altura según sea necesario
+.appointment-container {
+    font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
   }
-
-  .abierto {
-    background-color: green;
+  
+  /* Hero Section */
+  .hero-section {
+    background: linear-gradient(135deg, #4e73df 0%, #36b9cc 100%);
+    border-radius: 10px;
+    padding: 3rem 2rem;
+    margin-bottom: 2.5rem;
     color: white;
-}
-
-.cerrado {
-    background-color: red;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .main-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+  }
+  
+  .subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+  
+  .cta-button {
+    background-color: white;
+    color: #4e73df;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  }
+  
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  }
+  
+  .cta-button i {
+    margin-right: 8px;
+  }
+  
+  /* Grid Layout */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  @media (min-width: 768px) {
+    .info-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  /* Section Headers */
+  .section-header {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .section-title {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .section-divider {
+    height: 4px;
+    width: 60px;
+    background: linear-gradient(90deg, #4e73df, #36b9cc);
+    margin: 0 auto;
+    border-radius: 2px;
+  }
+  
+  /* Schedule Cards */
+  .schedule-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 1rem;
+  }
+  
+  .schedule-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .schedule-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  }
+  
+  .day-badge {
+    padding: 0.8rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+  }
+  
+  .time-display {
+    padding: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.9rem;
+  }
+  
+  .schedule-open .day-badge {
+    background-color: #4e73df;
     color: white;
-}
-
-.btn-primary.btn-lg {
-    transition: transform 0.3s ease;
-}
-
-.btn-primary.btn-lg:hover {
-    transform: scale(1.1);
-}
-
-
-
+  }
+  
+  .schedule-closed .day-badge {
+    background-color: #e74a3b;
+    color: white;
+  }
+  
+  .schedule-open .time-display {
+    color: #2c3e50;
+    background-color: #f8f9fc;
+  }
+  
+  .schedule-closed .time-display {
+    color: #e74a3b;
+    background-color: #fff5f5;
+  }
+  
+  /* Clinic Info Card */
+  .clinic-info-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+  
+  .clinic-logo {
+    background: linear-gradient(135deg, #4e73df 0%, #36b9cc 100%);
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .clinic-logo i {
+    font-size: 3rem;
+    color: white;
+  }
+  
+  .clinic-details {
+    padding: 2rem;
+  }
+  
+  .info-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+  }
+  
+  .info-item:last-child {
+    margin-bottom: 0;
+  }
+  
+  .info-item i {
+    font-size: 1.2rem;
+    color: #4e73df;
+    margin-right: 1rem;
+    margin-top: 3px;
+  }
+  
+  .info-item label {
+    display: block;
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 0.3rem;
+  }
+  
+  .info-item p {
+    margin: 0;
+    color: #2c3e50;
+    font-weight: 500;
+  }

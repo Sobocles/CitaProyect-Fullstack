@@ -1,23 +1,84 @@
+// Estilos para la gestión de horarios médicos
 .cursor {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .icon-container {
-    display: inline-block;
-    margin-right: 10px;  /* Esto añade un pequeño espacio entre los íconos */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px;
 }
 
-/* Forzar un layout fijo para que las columnas mantengan anchos constantes */
-table {
-    width: 100%;
-    table-layout: fixed;
-  }
-  
-  /* Evitar que el contenido se desborde y mostrar "..." si es muy largo */
-  table th,
-  table td {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
+/* Estilos para los botones */
+.btn-group .btn {
+  transition: all 0.3s ease;
+}
+
+/* Estilos para la tabla */
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table th,
+.table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+/* Mejoras para los botones de acción */
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+}
+
+/* Estilos para las tarjetas */
+.card {
+  border-radius: 0.5rem;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.card-header {
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  padding: 1rem 1.5rem;
+}
+
+.shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+
+/* Estilo para el mensaje de alerta */
+.alert {
+  border-left: 4px solid #0dcaf0;
+}
+
+/* Estilo para la fila al pasar el mouse */
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+/* Estilo para los badges */
+.badge {
+  font-weight: 500;
+  padding: 0.35em 0.65em;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+/* Estilo para las filas alternadas */
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Estilo para campos vacíos */
+td:empty:before {
+  content: "---";
+  color: #aaa;
+}

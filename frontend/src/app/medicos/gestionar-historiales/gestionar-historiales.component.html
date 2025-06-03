@@ -1,99 +1,173 @@
-<div class="row animated fadeIn fast">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-
-                <input type="text"
-                        class="form-control"
-                        placeholder="Buscar historial..."
-                        #txtTermino
-                        (keyup)="buscar( txtTermino.value )"/> 
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container-fluid">
-    <div class="row">
-      <div class="col">
-        <!-- Contenido principal aquí -->
+<div class="historiales-container">
+  <!-- Cabecera con búsqueda y botón de agregar -->
+  <div class="header-section">
+    <div class="search-box">
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input 
+          type="text"
+          class="search-input"
+          placeholder="Buscar por diagnóstico, paciente o fecha..."
+          #txtTermino
+          (keyup)="buscar(txtTermino.value)">
+        <button 
+          *ngIf="txtTermino.value.length > 0" 
+          class="clear-search" 
+          (click)="txtTermino.value=''; buscar('')">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
-      <div class="col-auto">
-        <a routerLink="/agregar-historial" class="btn btn-primary">Agregar historial</a>
+    </div>
+    
+    <div class="action-buttons">
+      <a routerLink="/agregar-historial" class="btn-add">
+        <i class="fas fa-plus-circle"></i> 
+        Crear Nuevo Historial
+      </a>
+    </div>
+  </div>
+  
+  <!-- Panel principal con la tabla de historiales -->
+  <div class="historiales-panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <i class="fas fa-file-medical"></i>
+        <div class="title-content">
+          <h4>Historiales Médicos</h4>
+          <p>Total registrados: <span class="badge-count">{{totalHistoriales}}</span></p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="table-container">
+      <div class="table-responsive">
+        <table class="historial-table">
+          <thead>
+            <tr>
+              <th class="th-id">
+                <div class="th-content">
+                  <i class="fas fa-hashtag th-icon"></i>ID
+                </div>
+              </th>
+              <th>
+                <div class="th-content">
+                  <i class="fas fa-stethoscope th-icon"></i>Diagnóstico
+                </div>
+              </th>
+              <th>
+                <div class="th-content">
+                  <i class="fas fa-pills th-icon"></i>Medicamento
+                </div>
+              </th>
+              <th>
+                <div class="th-content">
+                  <i class="fas fa-clipboard-list th-icon"></i>Notas
+                </div>
+              </th>
+              <th>
+                <div class="th-content">
+                  <i class="fas fa-calendar-day th-icon"></i>Fecha
+                </div>
+              </th>
+              <th>
+                <div class="th-content">
+                  <i class="fas fa-user-injured th-icon"></i>Paciente
+                </div>
+              </th>
+              <th>
+                <div class="th-content">
+                  <i class="fas fa-cog th-icon"></i>Acciones
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let historial of historiales" class="historial-row">
+              <td class="historial-id">{{ historial.id_historial }}</td>
+              
+              <td class="historial-diagnostico">
+                <div class="text-ellipsis" title="{{ historial.diagnostico }}">
+                  {{ historial.diagnostico }}
+                </div>
+              </td>
+              
+              <td class="historial-medicamento">
+                <div class="text-ellipsis" title="{{ historial.medicamento }}">
+                  {{ historial.medicamento || 'No prescrito' }}
+                </div>
+              </td>
+              
+              <td class="historial-notas">
+                <div class="text-ellipsis" title="{{ historial.notas }}">
+                  {{ historial.notas || 'Sin notas adicionales' }}
+                </div>
+              </td>
+              
+              <td class="historial-fecha">
+                <div class="fecha-badge">
+                  <i class="far fa-calendar-alt"></i>
+                  {{ historial.fecha_consulta | date: 'dd MMM, yyyy' }}
+                </div>
+              </td>
+              
+              <td class="historial-paciente">
+                <div class="paciente-info">
+                  <div class="paciente-avatar">
+                    {{ historial.paciente.nombre.charAt(0) }}{{ historial.paciente.apellidos.charAt(0) }}
+                  </div>
+                  <div class="paciente-nombre">
+                    {{ historial.paciente.nombre }} {{ historial.paciente.apellidos }}
+                  </div>
+                </div>
+              </td>
+              
+              <td class="historial-acciones">
+                <div class="acciones-container">
+                  <button 
+                    class="btn-action btn-edit" 
+                    title="Editar historial"
+                    (click)="editarHistorial(historial)">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button 
+                    class="btn-action btn-delete" 
+                    title="Eliminar historial"
+                    (click)="borrarHistorial(historial)">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            
+            <!-- Estado vacío cuando no hay historiales -->
+            <tr *ngIf="historiales.length === 0" class="empty-row">
+              <td colspan="7">
+                <div class="empty-state">
+                  <i class="fas fa-folder-open empty-icon"></i>
+                  <h3 class="empty-title">No hay historiales disponibles</h3>
+                  <p class="empty-message">
+                    {{ txtTermino.value.length > 0 ? 'No se encontraron resultados para tu búsqueda.' : 'Actualmente no hay historiales médicos registrados.' }}
+                  </p>
+                  <a routerLink="/agregar-historial" class="btn-empty-action" *ngIf="txtTermino.value.length === 0">
+                    <i class="fas fa-plus-circle"></i> Crear primer historial
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Paginador -->
+      <div *ngIf="txtTermino.value.length === 0" class="pagination-container">
+        <app-paginator
+          [totalItems]="totalHistoriales"
+          [(offset)]="desde"
+          [pageSize]="5"
+          (offsetChange)="cambiarPagina($event)"
+          class="custom-paginator">
+        </app-paginator>
       </div>
     </div>
   </div>
-
-<div class="row animated fadeIn fast"> <!--SI NO ESTA CARGADO-->
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Historiales medicos escritos </h4>
-                <h6 class="card-subtitle">Historiales registrados en mi aplicacion ({{this.totalHistoriales}})</h6>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                      <thead>
-                        <tr>
-         
-                          <th>ID </th>
-                          <th>Diagnostico</th>
-                          <th>Medicamento</th>
-                          <th>notas</th>
-                          <th>Fecha de consulta</th>
-                          <th>Paciente</th>
-                          <th>Acciones</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let historial of historiales">
-                          <td>{{historial.id_historial}}</td>
-                          <td>{{historial.diagnostico}}</td>
-                          <td>{{historial.medicamento}}</td>
-                          <td>{{historial.notas}}</td>                  
-                          <td>{{ historial.fecha_consulta | date: 'MMM d, y' }}</td>
-
-                          <td>{{historial.paciente.nombre}} {{historial.paciente.apellidos}}</td>
-                          
-
-                          <td>
-                            <div class="icon-container d-flex">
-                              <a class="cursor mr-2"
-                                 data-toggle="tooltip" 
-                                 data-original-title="Editar"
-                                 (click)="editarHistorial( historial )"> 
-                                <i class="fa fa-pencil text-primary"></i> 
-                              </a>
-                              <a class="cursor"
-                                 data-toggle="tooltip" 
-                                 data-original-title="Borrar"
-                                 (click)="borrarHistorial( historial )"> 
-                                <i class="fa fa-close text-danger"></i> 
-                              </a>
-                            </div>
-                          </td>
-                          
-                
-                
-                
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                <!--ESTA CONDICION SE HACE PARA QUE CUANDO SE TECLEA EN LA BARRA DE BUSQUEDA Y SE CARGAN LOS RESULTADOS DE BUSQUEDA DESAPARESCAN LOS BOTONES SIGUIENTES Y ANTERIOR EN LA PANTALLA-->
-                <div *ngIf="txtTermino.value.length === 0"> <!--SI EL TERMINO ES IGUAL A 0 LOS BOTONES SIGUIENTE Y ANTERIOR SE VAN A MOSTRAR CASO CONTRARIO VAN A DESAPARECER-->
-                  <app-paginator 
-                  [totalItems]="totalHistoriales" 
-                  [(offset)]="desde" 
-                  [pageSize]="5"
-                  (offsetChange)="cambiarPagina($event)">
-                </app-paginator>
-              </div>
-
-            
-            </div>
-        </div>
-    </div>
-
 </div>
-

@@ -1,32 +1,78 @@
-<div *ngIf="bloques.length > 0">
-    <h2>Horarios disponibles</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Médico</th>
-                <th>Hora Inicio</th>
-                <th>Hora Fin</th>
-                <th>Precio</th>
-                <th>Especialidad medica</th>
-                <th>Acción</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let bloque of bloques">
-                <td>{{ bloque.medicoNombre }}</td>
-                <td>{{ bloque.hora_inicio }}</td>
-                <td>{{ bloque.hora_fin }}</td>
-                <td>{{ bloque.precio }}</td>
-                <td>{{ bloque.especialidad }}</td>
-            
-                <td><button class="btn btn-primary" (click)="agendarCita(bloque)">Agendar Cita</button></td>
-            </tr>
-        </tbody>
-        
-    </table>
-</div>
-<div *ngIf="bloques.length === 0">
-    <h2>No hay medicos disponibles para ese dia, por favor seleccione otra fecha</h2>
-    <button class="btn btn-secondary" (click)="volverAlFormulario()">Volver al Formulario de Cita</button>
-</div>
-
+<div class="appointment-selection">
+    <div *ngIf="bloques.length > 0" class="available-slots-container">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light">
+          <h4 class="mb-0 text-primary"><i class="fa fa-calendar-check-o me-2"></i>Horarios disponibles</h4>
+          <p class="text-muted small mb-0">Seleccione el horario que mejor se adapte a sus necesidades</p>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover table-striped mb-0">
+              <thead class="bg-light text-dark">
+                <tr>
+                  <th class="px-3 py-3">Médico</th>
+                  <th class="px-3 py-3">Hora Inicio</th>
+                  <th class="px-3 py-3">Hora Fin</th>
+                  <th class="px-3 py-3">Precio</th>
+                  <th class="px-3 py-3">Especialidad</th>
+                  <th class="px-3 py-3 text-center">Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let bloque of bloques">
+                  <td class="px-3 py-3 align-middle text-capitalize">
+                    <div class="d-flex align-items-center">
+                      <span class="avatar avatar-sm bg-primary text-white me-2">
+                        {{ bloque.medicoNombre.charAt(0) }}
+                      </span>
+                      <span>{{ bloque.medicoNombre }}</span>
+                    </div>
+                  </td>
+                  <td class="px-3 py-3 align-middle">
+                    <span class="badge bg-light text-dark">
+                      <i class="fa fa-clock-o me-1"></i>
+                      {{ bloque.hora_inicio }}
+                    </span>
+                  </td>
+                  <td class="px-3 py-3 align-middle">
+                    <span class="badge bg-light text-dark">
+                      <i class="fa fa-clock-o me-1"></i>
+                      {{ bloque.hora_fin }}
+                    </span>
+                  </td>
+                  <td class="px-3 py-3 align-middle">
+                    <span class="fw-bold">$ {{ bloque.precio | number:'1.0-0' }}</span>
+                  </td>
+                  <td class="px-3 py-3 align-middle text-capitalize">
+                    <span class="badge bg-info text-white">
+                      {{ bloque.especialidad }}
+                    </span>
+                  </td>
+                  <td class="px-3 py-3 align-middle text-center">
+                    <button class="btn btn-primary btn-appointment" (click)="agendarCita(bloque)">
+                      <i class="fa fa-calendar-plus-o me-1"></i>
+                      Agendar
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div *ngIf="bloques.length === 0" class="no-slots-container">
+      <div class="card shadow-sm">
+        <div class="card-body text-center p-5">
+          <i class="fa fa-calendar-times-o text-danger empty-icon mb-3"></i>
+          <h4 class="mb-3">No hay médicos disponibles</h4>
+          <p class="text-muted mb-4">No se encontraron horarios disponibles para la fecha seleccionada. Por favor intente con otra fecha.</p>
+          <button class="btn btn-secondary" (click)="volverAlFormulario()">
+            <i class="fa fa-arrow-left me-1"></i>
+            Volver al formulario
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

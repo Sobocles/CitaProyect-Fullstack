@@ -1,8 +1,117 @@
-.btn-primary {
-    transition: transform 0.3s ease;
+// Estilos para la selección de citas médicas
+.appointment-selection {
+  padding: 20px 0;
+}
+
+// Estilos para la tarjeta
+.card {
+  border-radius: 10px;
+  border: none;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.shadow-sm {
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+}
+
+// Estilos para la tabla
+.table {
+  margin-bottom: 0;
+}
+
+.table th {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table tbody tr {
+  transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+// Estilo para avatar con iniciales
+.avatar {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+// Estilos para el botón de agendar
+.btn-appointment {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
   
-    &:hover {
-      transform: scale(1.05);
-    }
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Estilos para cuando no hay slots disponibles
+.no-slots-container {
+  max-width: 600px;
+  margin: 0 auto;
+  
+  .empty-icon {
+    font-size: 3rem;
+    display: block;
+  }
+}
+
+// Estilo para badges
+.badge {
+  padding: 0.5rem 0.75rem;
+  font-weight: 500;
+  border-radius: 6px;
+  
+  &.bg-info {
+    background-color: #38b2ac !important;
   }
   
+  &.bg-light {
+    background-color: #f1f5f9 !important;
+  }
+}
+
+// Estilos para textos
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .table th, 
+  .table td {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+  
+  .btn-appointment {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}

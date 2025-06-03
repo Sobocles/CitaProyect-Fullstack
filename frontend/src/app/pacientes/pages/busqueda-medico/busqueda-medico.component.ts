@@ -35,7 +35,7 @@ export class BusquedaMedicoComponent implements OnInit {
 
 agendarCita(bloque: Bloque): void {
   const rutPaciente = this.AuthService.usuario.rut!;
-
+  console.log();
   // Primero creamos la cita médica
   this.CitaMedicaService.crearCitaMedicaPaciente(bloque, rutPaciente)
     .subscribe(
@@ -50,7 +50,7 @@ agendarCita(bloque: Bloque): void {
             responsePago => {
               console.log('Aquí está la respuesta del pago', responsePago);
               // Aquí manejas la redirección o lo que sea necesario después del pago
-              window.location.href = responsePago.init_point;
+              window.location.href = responsePago.sandbox_init_point;
             },
             errorPago => {
               console.error('Error al crear la orden de pago:', errorPago);

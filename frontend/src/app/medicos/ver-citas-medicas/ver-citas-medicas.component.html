@@ -1,78 +1,156 @@
-<div class="row animated fadeIn fast">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-
-                <input type="text"
-                        class="form-control"
-                        placeholder="Buscar Citas..."
-                        #txtTermino
-                        (keyup)="buscar( txtTermino.value )"/> <!--CUANDO SE PRESIONE UNA TECLA BUSQUE EL TERMINO KEYUP ES PARA VER LAS LETRAS QUE SE ESCRIBEN EN TIEMPO REAL MIENTRAS SE EPREISONA UNA LETRA-->
-
-            </div>
+<div class="citas-container">
+  <!-- Cabecera con estadísticas y búsqueda -->
+  <div class="citas-header">
+    <div class="stats-card">
+      <div class="stats-icon">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div class="stats-info">
+        <h4 class="stats-title">Citas Médicas</h4>
+        <div class="stats-count">
+          Total: <span class="badge-count">{{totalCitas}}</span>
         </div>
+      </div>
     </div>
-</div>
-
-
-<div class="row animated fadeIn fast"> <!--SI NO ESTA CARGADO-->
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Total de Citas: ({{totalCitas}}) </h4>
-                <h6 class="card-subtitle">Citas medicas</h6>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                      <thead>
-                        <tr>
-         
-                          <th> ID </th>
-                          <th>Motivo</th>
-                          <th>Fecha</th>
-                          <th>Hora inicio</th>
-                          <th>Hora Fin</th>
-                          <th>Nombre</th>
-                          <th>Apellidos</th>
-                          <th>Estado cita</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let cita of citasMedicas">
-                          <td>{{ cita.idCita }}</td>
-                          <td>{{ cita.motivo }}</td>
-                          <td>{{ cita.fecha | date: 'mediumDate' }}</td>
-                          <td>{{ cita.hora_inicio }}</td>
-                          <td>{{ cita.hora_fin }}</td>
-                          <td>{{ cita.paciente.nombre }}</td>
-                          <td>{{ cita.paciente.apellidos}}</td>
-                          
-                          <select class="form-control" [(ngModel)]="cita.estado" (change)="cambioEstado(cita)">
-                            <option value="en_curso">En Curso</option>
-                            <option value="terminado">Terminado</option>               
-                            <option value="pagado">Pagado</option>
-                  
-                        
-                        </select>
-
-                        </tr>
-                      </tbody>
-                      
-                    </table>
-                  </div>
-                <!--ESTA CONDICION SE HACE PARA QUE CUANDO SE TECLEA EN LA BARRA DE BUSQUEDA Y SE CARGAN LOS RESULTADOS DE BUSQUEDA DESAPARESCAN LOS BOTONES SIGUIENTES Y ANTERIOR EN LA PANTALLA-->
-                <div *ngIf="txtTermino.value.length === 0"> <!--SI EL TERMINO ES IGUAL A 0 LOS BOTONES SIGUIENTE Y ANTERIOR SE VAN A MOSTRAR CASO CONTRARIO VAN A DESAPARECER-->
-                  <app-paginator 
-                  [totalItems]="totalCitas" 
-                  [(offset)]="desde" 
-                  [pageSize]="5"
-                  (offsetChange)="cambiarPagina($event)">
-                </app-paginator>
+    
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input 
+          type="text"
+          class="search-input"
+          placeholder="Buscar por paciente, motivo o fecha..."
+          #txtTermino
+          (keyup)="buscar(txtTermino.value)">
+        <button 
+          *ngIf="txtTermino.value.length > 0" 
+          class="clear-search" 
+          (click)="txtTermino.value=''; buscar('')">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Tabla de citas -->
+  <div class="citas-table-container">
+    <div class="table-responsive">
+      <table class="citas-table">
+        <thead>
+          <tr>
+            <th class="th-id">
+              <div class="th-content">
+                <i class="fas fa-hashtag th-icon"></i>ID
               </div>
-            
-            </div>
-        </div>
+            </th>
+            <th>
+              <div class="th-content">
+                <i class="fas fa-comment-medical th-icon"></i>Motivo
+              </div>
+            </th>
+            <th>
+              <div class="th-content">
+                <i class="fas fa-calendar-day th-icon"></i>Fecha
+              </div>
+            </th>
+            <th>
+              <div class="th-content">
+                <i class="fas fa-clock th-icon"></i>Horario
+              </div>
+            </th>
+            <th>
+              <div class="th-content">
+                <i class="fas fa-user-injured th-icon"></i>Paciente
+              </div>
+            </th>
+            <th>
+              <div class="th-content">
+                <i class="fas fa-tasks th-icon"></i>Estado
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cita of citasMedicas" class="cita-row">
+            <td class="cita-id">{{ cita.idCita }}</td>
+            <td class="cita-motivo">
+              <div class="td-content">
+                <div class="motivo-text">{{ cita.motivo }}</div>
+              </div>
+            </td>
+            <td class="cita-fecha">
+              <div class="fecha-badge">
+                <i class="far fa-calendar-alt fecha-icon"></i>
+                {{ cita.fecha | date: 'd MMM, yyyy' }}
+              </div>
+            </td>
+            <td class="cita-horario">
+              <div class="horario-container">
+                <span class="time-badge">
+                  <i class="far fa-clock"></i> {{ cita.hora_inicio }}
+                </span>
+                <span class="time-separator">a</span>
+                <span class="time-badge">
+                  <i class="far fa-clock"></i> {{ cita.hora_fin }}
+                </span>
+              </div>
+            </td>
+            <td class="cita-paciente">
+              <div class="paciente-info">
+                <div class="paciente-avatar">
+                  {{ cita.paciente.nombre.charAt(0) }}{{ cita.paciente.apellidos.charAt(0) }}
+                </div>
+                <div class="paciente-nombre">
+                  <span class="nombre">{{ cita.paciente.nombre }}</span>
+                  <span class="apellido">{{ cita.paciente.apellidos }}</span>
+                </div>
+              </div>
+            </td>
+            <td class="cita-estado">
+              <div class="estado-container">
+                <select 
+                  class="estado-select" 
+                  [ngClass]="{
+                    'en-curso': cita.estado === 'en_curso',
+                    'terminado': cita.estado === 'terminado',
+                    'pagado': cita.estado === 'pagado'
+                  }"
+                  [(ngModel)]="cita.estado" 
+                  (change)="cambioEstado(cita)">
+                  <option value="en_curso">En Curso</option>
+                  <option value="terminado">Terminado</option>              
+                  <option value="pagado">Pagado</option>
+                </select>
+                <span class="select-arrow"></span>
+              </div>
+            </td>
+          </tr>
+          
+          <!-- Estado vacío -->
+          <tr *ngIf="citasMedicas.length === 0" class="empty-row">
+            <td colspan="6">
+              <div class="empty-state">
+                <i class="fas fa-calendar-times empty-icon"></i>
+                <h3 class="empty-title">No hay citas disponibles</h3>
+                <p class="empty-message">
+                  {{ txtTermino.value.length > 0 ? 'No se encontraron resultados para tu búsqueda.' : 'Actualmente no tienes citas médicas programadas.' }}
+                </p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
+    
+    <!-- Paginador -->
+    <div *ngIf="txtTermino.value.length === 0" class="paginador-container">
+      <app-paginator
+        [totalItems]="totalCitas"
+        [(offset)]="desde"
+        [pageSize]="5"
+        (offsetChange)="cambiarPagina($event)"
+        class="custom-paginator">
+      </app-paginator>
+    </div>
+  </div>
 </div>
-
-

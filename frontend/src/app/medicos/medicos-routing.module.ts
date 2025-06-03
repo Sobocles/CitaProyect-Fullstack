@@ -19,10 +19,11 @@ const routes: Routes = [
       { path: 'gestionar-historiales', component: GestionarHistorialesComponent, canActivate: [AuthGuard, medicGuard] },
       { path: 'agregar-historial', component: HistorialComponent, canActivate: [AuthGuard, medicGuard] },
       { path: 'editar-historial/:id', component: HistorialComponent, canActivate: [AuthGuard, medicGuard] },
-      { path: 'cambiar-password-medicos', component: CambiarPasswordMedicoComponent, canActivate: [AuthGuard,medicGuard], },
-      { path: 'ver-citas', component:VerCitasMedicasComponent, canActivate: [AuthGuard,medicGuard], },
-      { path: 'agregar-historial', component: HistorialComponent, canActivate: [AuthGuard,medicGuard], },
-     
+      { path: 'cambiar-password-medicos', component: CambiarPasswordMedicoComponent, canActivate: [AuthGuard, medicGuard] },
+      { path: 'ver-citas', component: VerCitasMedicasComponent, canActivate: [AuthGuard, medicGuard] },
+      // Elimina esta línea duplicada
+      // { path: 'agregar-historial', component: HistorialComponent, canActivate: [AuthGuard, medicGuard] },
+      
       { path: '**', redirectTo: 'gestionar-historiales' },
     ],
   },

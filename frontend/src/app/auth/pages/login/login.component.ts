@@ -1,13 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-// Importa otras clases si es necesario
-
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 import { Router } from '@angular/router';
-
 import { AuthService } from '../../services/auth.service';
 import Swal from 'sweetalert2';
-
 
 @Component({
   selector: 'app-login',
@@ -15,61 +10,80 @@ import Swal from 'sweetalert2';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-
-  
-
+ 
   miFormulario: FormGroup = this.fb.group({
-    email: ['', [Validators.required, Validators.email]], // Cambia 'username' a 'email'
+    email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
-  ngOnInit(): void {
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router, 
+    private authService: AuthService
+  ) { }
 
+  ngOnInit(): void {
+    // Inicialización si es necesaria
   }
 
-  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) { }
-//gestionar-pacientes
-login() {
-  const { email, password } = this.miFormulario.value;
-
-  this.authService.login(email, password).subscribe(
-    resp => {
-      console.log(resp);
-      // Aquí se maneja la lógica de redirección según el rol del usuario
-      if (resp.userOrMedico.rol === 'ADMIN_ROLE') {
-        this.router.navigateByUrl('/inicio-instrucciones');
-      } else if (resp.userOrMedico.rol === 'USER_ROLE') {
-        this.router.navigateByUrl('/inicio-paciente');
-      } else if (resp.userOrMedico.rol === 'MEDICO_ROLE') {
-        this.router.navigateByUrl('/agregar-historial');
-      } else {
-        console.error('Rol de usuario no reconocido');
-       
-      }
-    },
-    error => {
-      // Manejo de errores de autenticación
-      console.error('Error en el login:', error);
-      let mensaje = 'Error en la autenticación';
-
-      // Personaliza este mensaje según la respuesta del backend
-      if (error.status === 400) {
-        mensaje = 'Contraseña incorrecta';
-      } else if (error.status === 404) {
-        mensaje = 'Correo no encontrado';
-      } else if (error.status === 500) {
-        mensaje = 'Problema del servidor, intente más tarde';
-      }
-
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: mensaje
-      });
+  login() {
+    console.log('📝 Iniciando proceso de login en componente');
+    if (this.miFormulario.invalid) {
+      console.log('📝 Formulario inválido, marcando como touched');
+      this.miFormulario.markAllAsTouched();
+      return;
     }
-  );
-}
-
-
-  
+    
+    const { email, password } = this.miFormulario.value;
+    console.log('📝 Intentando login con email:', email);
+    
+    this.authService.login(email, password).subscribe(
+      (resp: any) => {
+        console.log('📝 Respuesta de login recibida:', resp);
+        
+        // Verificar si existe userOrMedico en la respuesta
+        if (!resp.userOrMedico) {
+          console.error('📝 Error: userOrMedico no está definido en la respuesta');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Formato de respuesta incorrecto. Contacte al administrador.'
+          });
+          return;
+        }
+        
+        // Obtener el rol del usuario (intentar de ambas ubicaciones)
+        const rol = resp.userOrMedico.rol || resp.rol;
+        
+        console.log('📝 Rol del usuario obtenido:', rol);
+        console.log('📝 Tipo de dato del rol:', typeof rol);
+        
+        switch (rol) {
+          case 'ADMIN_ROLE':
+            console.log('📝 Redireccionando a admin');
+            this.router.navigateByUrl('/inicio-instrucciones');
+            break;
+          case 'USER_ROLE':
+            console.log('📝 Redireccionando a usuario');
+            this.router.navigateByUrl('/inicio-paciente');
+            break;
+          case 'MEDICO_ROLE':
+            console.log('📝 Redireccionando a médico');
+            this.router.navigateByUrl('/agregar-historial');
+            break;
+          default:
+            console.error('📝 Rol no reconocido:', rol);
+            Swal.fire({
+              icon: 'warning',
+              title: 'Advertencia',
+              text: 'Rol de usuario no reconocido'
+            });
+        }
+      },
+      error => {
+        console.error('📝 Error en login:', error);
+        // Resto del código de manejo de errores
+      }
+    );
+  }
 }

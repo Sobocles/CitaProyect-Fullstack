@@ -1,102 +1,152 @@
 <form [formGroup]="miFormulario" (ngSubmit)="registrar()" class="registration-form">
-  <div class="flex flex-column">
-    <span class="text-lg mb-4">Registro</span>
+  <div class="form-container">
+    <div class="form-header">
+      <mat-icon class="header-icon">person_add</mat-icon>
+      <h1 class="form-title">Registro de Usuario</h1>
+      <p class="form-subtitle">Complete todos los campos para crear su cuenta</p>
+    </div>
 
-    <div class="flex flex-row flex-wrap">
-      <!-- Grupo 1: RUT y Nombre -->
-      <div class="flex flex-column w-50 pl-2">
-        <mat-form-field>
-          <mat-label>Nombre</mat-label>
-          <input type="text" matInput formControlName="nombre" placeholder="Nombre">
-          <mat-error *ngIf="miFormulario?.get('nombre')?.invalid && miFormulario?.get('nombre')?.touched">
-            El nombre es requerido
-          </mat-error>
-          
-        </mat-form-field>
+    <mat-divider class="section-divider"></mat-divider>
+
+    <div class="form-section">
+      <h2 class="section-title">Información Personal</h2>
+      <div class="form-row">
+        <div class="form-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre</mat-label>
+            <input type="text" matInput formControlName="nombre" placeholder="Ingrese su nombre">
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error *ngIf="miFormulario?.get('nombre')?.invalid && miFormulario?.get('nombre')?.touched">
+              El nombre es requerido
+            </mat-error>
+          </mat-form-field>
+        </div>
         
-      </div>
-      
-      <div class="flex flex-column w-50 pr-2">
-        <mat-form-field>
-          <mat-label>Apellidos</mat-label>
-          <input type="text" matInput formControlName="apellidos" placeholder="Apellidos">
-          <mat-error *ngIf="miFormulario?.get('apellidos')?.invalid && miFormulario?.get('apellidos')?.touched">
-            Los apellidos son requeridos
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <div class="flex flex-column w-50 pr-2">
-        <mat-form-field>
-          <mat-label>RUT</mat-label>
-          <input type="text" matInput formControlName="rut" placeholder="RUT">
-          <mat-error *ngIf="miFormulario?.get('rut')?.errors?.['rutInvalid'] && miFormulario?.get('rut')?.touched">
-            El RUT no es válido
-          </mat-error>
-          
-        </mat-form-field>
-      </div>
-      <!-- Grupo 2: Apellidos y Email -->
-
-      <div class="flex flex-column w-50 pl-2">
-        <mat-form-field>
-          <mat-label>Email</mat-label>
-          <input type="email" matInput formControlName="email" placeholder="Email">
-          <mat-error *ngIf="miFormulario?.get('email')?.invalid && miFormulario?.get('email')?.touched">
-            {{ miFormulario.get('email')?.errors?.['email'] ? 'Email no válido' : 'El Email es requerido' }}
-          </mat-error>
-        </mat-form-field>
+        <div class="form-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Apellidos</mat-label>
+            <input type="text" matInput formControlName="apellidos" placeholder="Ingrese sus apellidos">
+            <mat-icon matSuffix>people</mat-icon>
+            <mat-error *ngIf="miFormulario?.get('apellidos')?.invalid && miFormulario?.get('apellidos')?.touched">
+              Los apellidos son requeridos
+            </mat-error>
+          </mat-form-field>
+        </div>
       </div>
 
-      <!-- Grupo 3: Contraseña y Fecha de Nacimiento -->
-      <div class="flex flex-column w-50 pr-2">
-        <mat-form-field>
-          <mat-label>Contraseña</mat-label>
-          <input type="password" matInput formControlName="password" placeholder="Contraseña">
-          <mat-error *ngIf="miFormulario?.get('password')?.errors?.['passwordStrength'] && miFormulario?.get('password')?.touched">
-            La contraseña debe tener al menos una mayúscula, un número y un símbolo (.,'!#$%^&*()_+-)
-          </mat-error>
-          
-        </mat-form-field>
-      </div>
-
-      <div class="flex flex-column w-50 pl-2">
-        <mat-form-field>
+      <div class="form-row">
+        <div class="form-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>RUT</mat-label>
+            <input type="text" matInput formControlName="rut" placeholder="Ej: 12345678-9">
+            <mat-icon matSuffix>badge</mat-icon>
+            <mat-error *ngIf="miFormulario?.get('rut')?.errors?.['rutInvalid'] && miFormulario?.get('rut')?.touched">
+              El RUT no es válido
+            </mat-error>
+            <mat-hint>Formato: 12345678-9</mat-hint>
+          </mat-form-field>
+        </div>
+        
+        <div class="form-field">
+          <mat-form-field appearance="outline" class="full-width">
             <mat-label>Fecha de Nacimiento</mat-label>
             <input type="date" matInput formControlName="fecha_nacimiento">
-            <!-- El mensaje de error para menor de 18 años se ha eliminado -->
-        </mat-form-field>
-    </div>
-    
-
-      <!-- Grupo 4: Teléfono y Dirección -->
-      <div class="flex flex-column w-50 pr-2">
-        <mat-form-field>
-          <mat-label>Teléfono</mat-label>
-          <input type="text" matInput formControlName="telefono" placeholder="Teléfono">
-          <mat-error *ngIf="miFormulario?.get('telefono')?.errors?.['telefonoInvalido'] && miFormulario?.get('telefono')?.touched">
-            El número de teléfono (debe ser +56 9 XXXX-XXXX)
-          </mat-error>
-          
-        </mat-form-field>
-      </div>
-      <div class="flex flex-column w-100">
-        <mat-form-field>
-          <mat-label>Dirección</mat-label>
-          <input type="text" matInput formControlName="direccion" placeholder="Dirección">
-          <mat-error *ngIf="miFormulario?.get('direccion')?.invalid && miFormulario?.get('direccion')?.touched">
-            La dirección es requerida
-          </mat-error>
-        </mat-form-field>
+            <mat-icon matSuffix>calendar_today</mat-icon>
+          </mat-form-field>
+        </div>
       </div>
     </div>
 
-    <button mat-button mat-flat-button color="primary" type="submit">
-      <mat-icon>save</mat-icon>
-      Registrar
-    </button>
+    <mat-divider class="section-divider"></mat-divider>
 
-    <div class="flex justify-content-end mt-5">
-      <a routerLink="/auth/login">Volver a login</a>
+    <div class="form-section">
+      <h2 class="section-title">Información de Contacto</h2>
+      <div class="form-row">
+        <div class="form-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input type="email" matInput formControlName="email" placeholder="ejemplo@correo.com">
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error *ngIf="miFormulario?.get('email')?.invalid && miFormulario?.get('email')?.touched">
+              {{ miFormulario.get('email')?.errors?.['email'] ? 'Email no válido' : 'El Email es requerido' }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        
+        <div class="form-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Teléfono</mat-label>
+            <input type="text" matInput formControlName="telefono" placeholder="+56 9 XXXX-XXXX">
+            <mat-icon matSuffix>phone</mat-icon>
+            <mat-error *ngIf="miFormulario?.get('telefono')?.errors?.['telefonoInvalido'] && miFormulario?.get('telefono')?.touched">
+              El número debe tener formato +56 9 XXXX-XXXX
+            </mat-error>
+            <mat-hint>Formato: +56 9 XXXX-XXXX</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field full-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Dirección</mat-label>
+            <input type="text" matInput formControlName="direccion" placeholder="Ingrese su dirección completa">
+            <mat-icon matSuffix>home</mat-icon>
+            <mat-error *ngIf="miFormulario?.get('direccion')?.invalid && miFormulario?.get('direccion')?.touched">
+              La dirección es requerida
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider class="section-divider"></mat-divider>
+
+    <div class="form-section">
+      <h2 class="section-title">Seguridad</h2>
+      <div class="form-row">
+        <div class="form-field full-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Contraseña</mat-label>
+            <input type="password" matInput formControlName="password" placeholder="Ingrese una contraseña segura">
+            <mat-icon matSuffix>lock</mat-icon>
+            <mat-error *ngIf="miFormulario?.get('password')?.errors?.['passwordStrength'] && miFormulario?.get('password')?.touched">
+              La contraseña debe tener al menos una mayúscula, un número y un símbolo (.,'!#$%^&*()_+-)
+            </mat-error>
+            <mat-hint>Incluya mayúsculas, números y símbolos</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="password-requirements" *ngIf="miFormulario?.get('password')?.touched">
+        <div class="requirement" [class.fulfilled]="hasUpperCase()">
+          <mat-icon>{{ hasUpperCase() ? 'check_circle' : 'cancel' }}</mat-icon>
+          <span>Al menos una letra mayúscula</span>
+        </div>
+        <div class="requirement" [class.fulfilled]="hasNumber()">
+          <mat-icon>{{ hasNumber() ? 'check_circle' : 'cancel' }}</mat-icon>
+          <span>Al menos un número</span>
+        </div>
+        <div class="requirement" [class.fulfilled]="hasSpecialChar()">
+          <mat-icon>{{ hasSpecialChar() ? 'check_circle' : 'cancel' }}</mat-icon>
+          <span>Al menos un símbolo especial</span>
+        </div>
+        <div class="requirement" [class.fulfilled]="hasMinLength()">
+          <mat-icon>{{ hasMinLength() ? 'check_circle' : 'cancel' }}</mat-icon>
+          <span>Mínimo 6 caracteres</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button mat-flat-button type="button" routerLink="/auth/login" class="secondary-button">
+        <mat-icon>arrow_back</mat-icon>
+        Volver
+      </button>
+      <button mat-flat-button color="primary" type="submit" class="submit-button" [disabled]="miFormulario.invalid">
+        <mat-icon>how_to_reg</mat-icon>
+        Registrar
+      </button>
     </div>
   </div>
 </form>

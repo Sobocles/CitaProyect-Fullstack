@@ -44,7 +44,11 @@ export class BusquedaMedicoService {
  */  
 
     pagarCita(precio: number, especialidad: string, idCita: number): Observable<any> {
+      console.log("entro a pagar cita");
       const url = `${base_url}/mercadoPago/create-order`;
+  
+      console.log(url);
+      console.log("lo que me arroja pagar",this.http.post(url, { precio: precio, motivo: especialidad, idCita },this.headers));;
       // Incluye ambos, el precio y la especialidad, en el cuerpo de la petición
       return this.http.post(url, { precio: precio, motivo: especialidad, idCita },this.headers);
     }

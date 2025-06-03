@@ -1,58 +1,107 @@
-<div class="container mt-5">
-  <h2 class="text-center mb-4">
-    {{ isEditMode ? 'Editar Historial Médico' : 'Redactar Historial Médico' }}
-  </h2>
-  <form [formGroup]="historialMedicoForm" (ngSubmit)="onSubmit()">
-    <div class="mb-3">
-      <label for="paciente" class="form-label">Paciente:</label>
-      <select class="form-control" id="paciente" formControlName="rut_paciente">
-        <option value="" disabled>Seleccionar paciente</option>
-        <option *ngFor="let paciente of pacientes" [value]="paciente.rut">
-          {{ paciente.nombre }} {{ paciente.apellidos }}
-        </option>
-      </select>
-      <div *ngIf="formularioIntentadoEnviar && historialMedicoForm.get('rut_paciente')?.hasError('required')" class="text-danger">
-        Se debe seleccionar un paciente.
+<div class="historial-container">
+  <div class="historial-card">
+    <div class="historial-header">
+      <div class="header-icon">
+        <i class="fas fa-notes-medical"></i>
       </div>
+      <h2 class="historial-title">
+        {{ isEditMode ? 'Editar Historial Médico' : 'Redactar Historial Médico' }}
+      </h2>
     </div>
-
-    <div class="mb-3">
-      <label for="medico" class="form-label">Médico:</label>
-      <select class="form-control" id="medico" formControlName="rut_medico">
-        <option [value]="AuthService.medico.rut">
-          {{ AuthService.medico.nombre }} {{ AuthService.medico.apellidos }}
-        </option>
-      </select>
-    </div>
-
-    <div class="mb-3">
-      <label for="diagnostico" class="form-label">Diagnóstico:</label>
-      <input type="text" class="form-control" id="diagnostico" formControlName="diagnostico">
-      <div *ngIf="formularioIntentadoEnviar && historialMedicoForm.get('diagnostico')?.hasError('required')" class="text-danger">
-        El diagnóstico es requerido.
+    
+    <form [formGroup]="historialMedicoForm" (ngSubmit)="onSubmit()" class="historial-form">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="paciente" class="form-label">
+            <i class="fas fa-user-injured"></i> Paciente
+          </label>
+          <select class="form-control custom-select" id="paciente" formControlName="rut_paciente">
+            <option value="" disabled>Seleccionar paciente</option>
+            <option *ngFor="let paciente of pacientes" [value]="paciente.rut">
+              {{ paciente.nombre }} {{ paciente.apellidos }}
+            </option>
+          </select>
+          <div *ngIf="formularioIntentadoEnviar && historialMedicoForm.get('rut_paciente')?.hasError('required')" class="text-danger validation-message">
+            <i class="fas fa-exclamation-triangle"></i> Se debe seleccionar un paciente.
+          </div>
+        </div>
+        
+        <div class="form-group col-md-6">
+          <label for="medico" class="form-label">
+            <i class="fas fa-user-md"></i> Médico
+          </label>
+          <select class="form-control custom-select" id="medico" formControlName="rut_medico">
+            <option [value]="AuthService.medico.rut">
+              {{ AuthService.medico.nombre }} {{ AuthService.medico.apellidos }}
+            </option>
+          </select>
+        </div>
       </div>
-    </div>
-
-    <div class="mb-3">
-      <label for="medicamento" class="form-label">Medicamento:</label>
-      <input type="text" class="form-control" id="medicamento" formControlName="medicamento">
-    </div>
-
-    <div class="mb-3">
-      <label for="notas" class="form-label">Notas:</label>
-      <textarea class="form-control" id="notas" formControlName="notas"></textarea>
-    </div>
-
-    <div class="mb-3">
-      <label for="fecha_consulta" class="form-label">Fecha de Consulta:</label>
-      <input type="date" class="form-control" id="fecha_consulta" formControlName="fecha_consulta">
-      <div *ngIf="formularioIntentadoEnviar && historialMedicoForm.get('fecha_consulta')?.hasError('required')" class="text-danger">
-        La fecha de consulta es requerida.
+      
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="diagnostico" class="form-label">
+            <i class="fas fa-stethoscope"></i> Diagnóstico
+          </label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="diagnostico" 
+            formControlName="diagnostico"
+            placeholder="Ingrese el diagnóstico del paciente">
+          <div *ngIf="formularioIntentadoEnviar && historialMedicoForm.get('diagnostico')?.hasError('required')" class="text-danger validation-message">
+            <i class="fas fa-exclamation-triangle"></i> El diagnóstico es requerido.
+          </div>
+        </div>
+        
+        <div class="form-group col-md-6">
+          <label for="medicamento" class="form-label">
+            <i class="fas fa-pills"></i> Medicamento
+          </label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="medicamento" 
+            formControlName="medicamento"
+            placeholder="Ingrese medicamentos prescritos">
+        </div>
       </div>
-    </div>
-
-    <button type="submit" class="btn btn-primary">
-      {{ isEditMode ? 'Guardar Cambios' : 'Guardar Historial' }}
-    </button>
-  </form>
+      
+      <div class="form-group">
+        <label for="notas" class="form-label">
+          <i class="fas fa-clipboard"></i> Notas Clínicas
+        </label>
+        <textarea 
+          class="form-control" 
+          id="notas" 
+          formControlName="notas" 
+          rows="4"
+          placeholder="Ingrese notas u observaciones adicionales"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="fecha_consulta" class="form-label">
+          <i class="fas fa-calendar-alt"></i> Fecha de Consulta
+        </label>
+        <input 
+          type="date" 
+          class="form-control date-input" 
+          id="fecha_consulta" 
+          formControlName="fecha_consulta">
+        <div *ngIf="formularioIntentadoEnviar && historialMedicoForm.get('fecha_consulta')?.hasError('required')" class="text-danger validation-message">
+          <i class="fas fa-exclamation-triangle"></i> La fecha de consulta es requerida.
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline-secondary" routerLink="/medicos/gestionar-historiales">
+          <i class="fas fa-arrow-left"></i> Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary submit-button">
+          <i class="fas fa-save"></i> 
+          {{ isEditMode ? 'Guardar Cambios' : 'Guardar Historial' }}
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
