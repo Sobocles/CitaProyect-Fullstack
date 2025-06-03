@@ -30,6 +30,8 @@ const jwt_1 = __importDefault(require("../helpers/jwt"));
 const tipo_cita_1 = __importDefault(require("../models/tipo_cita"));
 const cita_medica_1 = __importDefault(require("../models/cita_medica"));
 const sequelize_1 = require("sequelize");
+const rol_1 = __importDefault(require("../models/rol"));
+const enums_1 = require("../types/enums");
 class Medicos {
     constructor() {
         this.getMedicos = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -47,6 +49,11 @@ class Medicos {
                     where: {
                         estado: 'activo' // Filtrar por médicos activos
                     },
+                    include: [{
+                            model: rol_1.default,
+                            as: 'rol',
+                            attributes: ['id', 'nombre', 'codigo']
+                        }],
                     offset: desde,
                     limit: 5,
                 });
@@ -73,12 +80,26 @@ class Medicos {
                 // Obtener todos los médicos activos
                 const medicos = yield medico_1.default.findAll({
                     attributes: ['rut', 'nombre', 'apellidos', 'especialidad_medica'],
+                    include: [{
+                            model: rol_1.default,
+                            as: 'rol',
+                            attributes: ['codigo']
+                        }],
                     where: {
                         estado: 'activo' // Agregar condición para filtrar solo médicos activos
                     }
                 });
+                // Procesamos los médicos para asegurar compatibilidad
+                const medicosProcesados = medicos.map(medico => {
+                    const medicoJSON = medico.toJSON();
+                    // Asignar el código del rol directamente para compatibilidad
+                    if (medicoJSON.rol && medicoJSON.rol.codigo) {
+                        medicoJSON.rol = medicoJSON.rol.codigo;
+                    }
+                    return medicoJSON;
+                });
                 // Filtrar los médicos que tienen una especialidad válida
-                const medicosFiltrados = medicos.filter(medico => especialidades.includes(medico.especialidad_medica));
+                const medicosFiltrados = medicosProcesados.filter(medico => especialidades.includes(medico.especialidad_medica));
                 res.json({
                     ok: true,
                     medicos: medicosFiltrados
@@ -93,7 +114,7 @@ class Medicos {
             }
         });
         this.getAllMedicos = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            console.log('olaaaaaa aquí');
+            console.log('Obteniendo todos los médicos');
             try {
                 // Obtén el total de médicos activos
                 const totalMedicosActivos = yield medico_1.default.count({
@@ -101,11 +122,25 @@ class Medicos {
                 });
                 // Obtén los detalles de todos los médicos activos
                 const medicosActivos = yield medico_1.default.findAll({
-                    where: { estado: 'activo' } // Filtra por estado activo
+                    where: { estado: 'activo' },
+                    include: [{
+                            model: rol_1.default,
+                            as: 'rol',
+                            attributes: ['id', 'nombre', 'codigo']
+                        }]
+                });
+                // Procesamos los médicos para asegurar compatibilidad
+                const medicosProcesados = medicosActivos.map(medico => {
+                    const medicoJSON = medico.toJSON();
+                    // Asignar el código del rol directamente para compatibilidad
+                    if (medicoJSON.rol && medicoJSON.rol.codigo) {
+                        medicoJSON.rol = medicoJSON.rol.codigo;
+                    }
+                    return medicoJSON;
                 });
                 res.json({
                     ok: true,
-                    medicos: medicosActivos,
+                    medicos: medicosProcesados,
                     total: totalMedicosActivos
                 });
             }
@@ -119,16 +154,28 @@ class Medicos {
         this.getMedico = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { rut } = req.params;
             try {
-                const medico = yield medico_1.default.findByPk(rut);
+                const medico = yield medico_1.default.findByPk(rut, {
+                    include: [{
+                            model: rol_1.default,
+                            as: 'rol',
+                            attributes: ['id', 'nombre', 'codigo']
+                        }]
+                });
                 if (!medico) {
                     return res.status(404).json({
                         ok: false,
                         msg: 'Médico no encontrado',
                     });
                 }
+                // Procesar el médico para asegurar compatibilidad
+                const medicoJSON = medico.toJSON();
+                // Asignar el código del rol directamente para compatibilidad
+                if (medicoJSON.rol && medicoJSON.rol.codigo) {
+                    medicoJSON.rol = medicoJSON.rol.codigo;
+                }
                 res.json({
                     ok: true,
-                    medico,
+                    medico: medicoJSON,
                 });
             }
             catch (error) {
@@ -140,7 +187,7 @@ class Medicos {
             }
         });
         this.CrearMedico = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const _a = req.body, { email, password, rut, telefono } = _a, medicoData = __rest(_a, ["email", "password", "rut", "telefono"]);
+            const _a = req.body, { email, password, rut, telefono, rol: rolCodigo } = _a, medicoData = __rest(_a, ["email", "password", "rut", "telefono", "rol"]);
             try {
                 // Verificar si el correo ya está registrado por un médico activo
                 const existeEmailMedico = yield medico_1.default.findOne({
@@ -181,18 +228,41 @@ class Medicos {
                         msg: 'El número de teléfono ya está registrado para otro médico',
                     });
                 }
+                // Obtener el ID del rol (por defecto MEDICO_ROLE)
+                let rolId = 3; // Asumiendo que el ID de MEDICO_ROLE es 3
+                // Si se proporciona un rol específico, buscar su ID
+                if (rolCodigo) {
+                    const rol = yield rol_1.default.findOne({ where: { codigo: rolCodigo } });
+                    if (rol) {
+                        rolId = rol.id;
+                    }
+                }
+                else {
+                    // Si no se proporciona, buscar el rol de médico
+                    const rolMedico = yield rol_1.default.findOne({ where: { codigo: enums_1.UserRole.MEDICO } });
+                    if (rolMedico) {
+                        rolId = rolMedico.id;
+                    }
+                }
                 // Encriptar contraseña
                 const saltRounds = 10;
                 const hashedPassword = yield bcrypt_1.default.hash(password, saltRounds);
                 // Crea un nuevo médico
                 const nuevoMedico = yield medico_1.default.create(Object.assign(Object.assign({}, medicoData), { email,
                     rut,
-                    telefono, password: hashedPassword, rol: 'MEDICO_ROLE' }));
-                // Genera el JWT
-                const token = yield jwt_1.default.instance.generarJWT(nuevoMedico.rut, nuevoMedico.nombre, nuevoMedico.apellidos, nuevoMedico.rol);
+                    telefono, password: hashedPassword, rolId: rolId // Usar el ID del rol
+                 }));
+                // Obtener el rol para el JWT
+                const rol = yield rol_1.default.findByPk(rolId);
+                const rolCodigoJWT = rol ? rol.codigo : enums_1.UserRole.MEDICO;
+                // Genera el JWT usando el código del rol
+                const token = yield jwt_1.default.instance.generarJWT(nuevoMedico.rut, nuevoMedico.nombre, nuevoMedico.apellidos, rolCodigoJWT);
+                // Procesar el médico para la respuesta
+                const medicoJSON = nuevoMedico.toJSON();
+                medicoJSON.rol = rolCodigoJWT; // Asignar el código del rol
                 res.json({
                     ok: true,
-                    medico: nuevoMedico,
+                    medico: medicoJSON,
                     token
                 });
             }
@@ -209,6 +279,15 @@ class Medicos {
                 const { rut } = req.params;
                 const { body } = req;
                 console.log('aqui esta el rut', rut);
+                // Si se incluye un rol, obtener su ID
+                if (body.rol) {
+                    const rol = yield rol_1.default.findOne({ where: { codigo: body.rol } });
+                    if (rol) {
+                        body.rolId = rol.id;
+                    }
+                    // Eliminar el campo rol para evitar conflictos
+                    delete body.rol;
+                }
                 // Buscar el médico por su ID
                 const medico = yield medico_1.default.findByPk(rut);
                 if (!medico) {
@@ -217,10 +296,25 @@ class Medicos {
                         msg: 'Médico no encontrado',
                     });
                 }
-                // Actualizar los campos del médico con los valores proporcionados en el cuerpo de la solicitud
+                // Actualizar los campos del médico con los valores proporcionados
                 yield medico.update(body);
+                // Para la respuesta, obtener el médico con su rol
+                const medicoActualizado = yield medico_1.default.findByPk(rut, {
+                    include: [{
+                            model: rol_1.default,
+                            as: 'rol',
+                            attributes: ['id', 'nombre', 'codigo']
+                        }]
+                });
+                // Procesar el médico para asegurar compatibilidad
+                const medicoJSON = (medicoActualizado === null || medicoActualizado === void 0 ? void 0 : medicoActualizado.toJSON()) || {};
+                // Asignar el código del rol directamente para compatibilidad
+                if (medicoJSON.rol && medicoJSON.rol.codigo) {
+                    medicoJSON.rol = medicoJSON.rol.codigo;
+                }
                 res.json({
-                    medico,
+                    ok: true,
+                    medico: medicoJSON,
                 });
             }
             catch (error) {
@@ -257,11 +351,17 @@ class Medicos {
                 yield horario_medico_1.default.destroy({ where: { rut_medico: medico.rut } });
                 // Cambiar el estado del médico a inactivo
                 yield medico.update({ estado: 'inactivo' });
-                res.json({ msg: 'Médico, sus citas médicas seleccionadas y horarios asociados actualizados a estado inactivo.' });
+                res.json({
+                    ok: true,
+                    msg: 'Médico, sus citas médicas seleccionadas y horarios asociados actualizados a estado inactivo.'
+                });
             }
             catch (error) {
                 console.error(error);
-                res.status(500).json({ msg: 'Error en el servidor' });
+                res.status(500).json({
+                    ok: false,
+                    msg: 'Error en el servidor'
+                });
             }
         });
         this.cambiarPasswordMedico = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -272,6 +372,7 @@ class Medicos {
                 const dbMedico = yield medico_1.default.findByPk(rut);
                 if (!dbMedico) {
                     return res.status(400).json({
+                        ok: false,
                         msg: `No existe el médico con RUT: ${rut}`
                     });
                 }

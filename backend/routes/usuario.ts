@@ -1,56 +1,62 @@
-
+// BACKEND/routes/usuario.ts
 import { Router } from 'express';
 import { check } from 'express-validator';
-import { getUsuario, getUsuarios, CrearUsuario, putUsuario, deleteUsuario, getAllUsuarios, getPacientesConCitasPagadasYEnCurso, cambiarPassword, getPacientesConCitasPagadasYEnCursoYterminado } from '../controllers/usuario'
+import {
+  getUsuario,
+  getUsuarios,
+  putUsuario,
+  deleteUsuario,
+  getAllUsuarios,
+  getPacientesConCitasPagadasYEnCurso,
+  cambiarPassword,
+  getPacientesConCitasPagadasYEnCursoYterminado,
+  CrearUsuario
+} from '../controllers/usuario';
 import validarCampos from '../middlewares/validar-campos';
 import ValidarJwt from '../middlewares/validar-jwt';
 
 const router = Router();
 
-router.get('/' ,
-getUsuarios );
+// Obtener todos los usuarios
+router.get('/', getUsuarios);
 
-router.get('/all', 
-getAllUsuarios);
+// Obtener todos los usuarios (para listados)
+router.get('/all', getAllUsuarios);
 
-router.get('/allCurso/:rut_medico', 
- getPacientesConCitasPagadasYEnCurso);
+// Obtener pacientes con citas en curso para un médico
+router.get('/allCurso/:rut_medico', getPacientesConCitasPagadasYEnCurso);
 
- router.get('/allCursoTerminado/:rut_medico', 
- getPacientesConCitasPagadasYEnCursoYterminado);
+// Obtener pacientes con citas en curso o terminadas para un médico
+router.get('/allCursoTerminado/:rut_medico', getPacientesConCitasPagadasYEnCursoYterminado);
 
-router.get('/:id', 
-getUsuario );
+// Obtener un usuario por ID
+router.get('/:id', getUsuario);
 
+// Restaurar la ruta de creación de usuario para mantener compatibilidad
 router.post(
-    '/',   
-    [
-      
-      check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-      check('apellidos', 'Los apellidos son obligatorios').not().isEmpty(),
-      check('email', 'El correo es obligatorio').isEmail(),
-
-      check('telefono', 'El teléfono es obligatorio').not().isEmpty(),
-      check('direccion', 'La dirección es obligatoria').not().isEmpty(),
-      validarCampos.instance.validarCampos
-      
-    ],
-    CrearUsuario
-  );
-
-  router.put('/:id', 
+  '/',  
   [
-
-  ], 
-putUsuario
+    check('nombre', 'El nombre es obligatorio').not().isEmpty(),
+    check('apellidos', 'Los apellidos son obligatorios').not().isEmpty(),
+    check('email', 'El correo es obligatorio').isEmail(),
+    check('telefono', 'El teléfono es obligatorio').not().isEmpty(),
+    check('direccion', 'La dirección es obligatoria').not().isEmpty(),
+    validarCampos.instance.validarCampos
+  ],
+  CrearUsuario
 );
 
-router.delete('/:rut', deleteUsuario );
+// Actualizar un usuario
+router.put('/:id', putUsuario);
 
-router.post('/cambiarPassword',[
-  check('newPassword', 'El nuevo password es obligatorio').isLength({min:6}),
-  check('password', 'El password es obligatorio').isLength({min:6}),
- 
+// Eliminar un usuario
+router.delete('/:rut', deleteUsuario);
+
+// Cambiar contraseña
+router.post('/cambiarPassword', [
+  check('newPassword', 'El nuevo password es obligatorio').isLength({min: 6}),
+  check('password', 'El password es obligatorio').isLength({min: 6}),
+  validarCampos.instance.validarCampos
 ], cambiarPassword);
 
 export default router;

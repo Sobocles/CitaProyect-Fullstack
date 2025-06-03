@@ -11,34 +11,42 @@ export default class ValidarJwt {
     constructor() { }
 
     public async validarJwt(req: Request | any, res: Response, next: NextFunction) {
+        console.log('🔐 Middleware ValidarJwt iniciado');
         try {
-            const { authorization } = req.headers;
-            console.log('SE VALIDO EL TOKEN DE CREAR USUARIO',authorization)
-            // Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2M2NhYjQwNDJhMDA0OGIxMmQwNjE3ZjgiLCJub21icmUiOiJvY3VsdXMgMiIsImFwZWxsaWRvIjoiZWxlY3RybyBzb2Z0IiwiaWF0IjoxNjc0NDExNzM5LCJleHAiOjE2NzQ0OTgxMzl9.lVHpjrRSRmtti67qJu3DeKhAO5-rLChPXFr0zVQscHg
-            if (!authorization) {
-                return res.status(401).json({
-                    msg: `error token no existe`
-                });
-            }
-            "Bearer token"
-            const token = authorization.split(" ")[1];
-
-            const { rut, nombre, apellidos, rol }: any = await JwtGenerate.instance.comprobarToken(token);
-
-            req.rut = rut;
-            req.nombre = nombre;
-            req.apellidos = apellidos;
-            req.rol = rol;
-
-            console.log(rut, nombre, apellidos, rol)
-
-        } catch (error) {
-            return res.status(500).json({
-                ok: true,
-                msg: `Error conectarse con el servidor`
+          const { authorization } = req.headers;
+          console.log('🔐 Header de autorización:', authorization ? 'Presente' : 'Ausente');
+          
+          if (!authorization) {
+            console.error('🔐 Error: Token no existe en headers');
+            return res.status(401).json({
+              msg: `error token no existe`
             });
+          }
+          
+          const token = authorization.split(" ")[1];
+          console.log('🔐 Token extraído de header:', token.substring(0, 15) + '...');
+          
+          console.log('🔐 Llamando a comprobarToken');
+          const decodedToken = await JwtGenerate.instance.comprobarToken(token);
+          console.log('🔐 Token decodificado:', decodedToken);
+          
+          const { rut, nombre, apellidos, rol } = decodedToken;
+          console.log('🔐 Datos extraídos del token:', { rut, nombre, apellidos, rol });
+          
+          req.rut = rut;
+          req.nombre = nombre;
+          req.apellidos = apellidos;
+          req.rol = rol;
+          
+          console.log('🔐 Datos añadidos al request:', { rut, nombre, apellidos, rol });
+          console.log('🔐 Middleware ValidarJwt completado');
+        } catch (error) {
+          console.error('🔐 Error en ValidarJwt:', error);
+          return res.status(500).json({
+            ok: false,
+            msg: `Error conectarse con el servidor`
+          });
         }
         next();
-
-    }
+      }
 }

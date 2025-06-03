@@ -23,9 +23,8 @@ const tipo_cita_1 = __importDefault(require("../routes/tipo_cita"));
 const busquedas_1 = __importDefault(require("../routes/busquedas"));
 const horario_clinica_1 = __importDefault(require("../routes/horario_clinica"));
 const busqueda_cita_1 = __importDefault(require("../routes/busqueda_cita"));
-const payments_routes_1 = __importDefault(require("../routes/payments.routes"));
 const mercadoPago_1 = __importDefault(require("../routes/mercadoPago"));
-const cors = require('cors');
+const cors_1 = __importDefault(require("cors"));
 const connection_1 = __importDefault(require("../db/connection"));
 const enviorenment_1 = require("../global/enviorenment");
 class Server {
@@ -63,12 +62,11 @@ class Server {
     }
     middlewares() {
         // CORS
-        const corsOptions = {
-            origin: 'http://localhost:4200',
+        this.app.use((0, cors_1.default)({
+            origin: '*',
             methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-            credentials: true, // Habilita el envío de cookies u otras credenciales si es necesario
-        };
-        this.app.use(cors(corsOptions));
+            credentials: true
+        }));
         // Lectura del body
         this.app.use(express_1.default.json());
         // Carpeta Pública
@@ -86,7 +84,6 @@ class Server {
         this.app.use(this.apiPaths.busqueda, busquedas_1.default);
         this.app.use(this.apiPaths.horario_clinica, horario_clinica_1.default);
         this.app.use(this.apiPaths.busqueda_cita, busqueda_cita_1.default);
-        this.app.use(this.apiPaths.paypal, payments_routes_1.default);
         this.app.use(this.apiPaths.mercadoPago, mercadoPago_1.default);
     }
     listen() {
