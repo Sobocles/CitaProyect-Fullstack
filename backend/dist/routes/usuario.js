@@ -14,9 +14,9 @@ router.get('/', usuario_1.getUsuarios);
 // Obtener todos los usuarios (para listados)
 router.get('/all', usuario_1.getAllUsuarios);
 // Obtener pacientes con citas en curso para un médico
-router.get('/allCurso/:rut_medico', usuario_1.getPacientesConCitasPagadasYEnCurso);
+router.get('/allCurso/:rut_medico', getPacientesConCitasPagadasYEnCurso);
 // Obtener pacientes con citas en curso o terminadas para un médico
-router.get('/allCursoTerminado/:rut_medico', usuario_1.getPacientesConCitasPagadasYEnCursoYterminado);
+router.get('/allCursoTerminado/:rut_medico', getPacientesConCitasPagadasYEnCursoYterminado);
 // Obtener un usuario por ID
 router.get('/:id', usuario_1.getUsuario);
 // Restaurar la ruta de creación de usuario para mantener compatibilidad

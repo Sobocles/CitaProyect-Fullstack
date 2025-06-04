@@ -7,9 +7,10 @@ import {
   putUsuario,
   deleteUsuario,
   getAllUsuarios,
-  getPacientesConCitasPagadasYEnCurso,
+      getPacientesConCitasPagadasYEnCursoYterminado,
+          getPacientesConCitasPagadasYEnCurso,
   cambiarPassword,
-  getPacientesConCitasPagadasYEnCursoYterminado,
+
   CrearUsuario
 } from '../controllers/usuario';
 import validarCampos from '../middlewares/validar-campos';
