@@ -3,13 +3,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const usuario_1 = __importDefault(require("./usuario"));
+// models/associations.ts
 const tipo_cita_1 = __importDefault(require("./tipo_cita"));
 const cita_medica_1 = __importDefault(require("./cita_medica"));
 const medico_1 = __importDefault(require("./medico"));
 const horario_medico_1 = __importDefault(require("./horario_medico"));
 const historial_medico_1 = __importDefault(require("./historial_medico"));
 const factura_1 = __importDefault(require("./factura"));
+const usuario_1 = __importDefault(require("./usuario"));
+const rol_1 = __importDefault(require("./rol"));
 // Asociaciones para Usuario
 usuario_1.default.hasMany(cita_medica_1.default, { foreignKey: 'rut_paciente', sourceKey: 'rut', onDelete: 'CASCADE' });
 usuario_1.default.hasMany(historial_medico_1.default, { foreignKey: 'rut_paciente', sourceKey: 'rut', onDelete: 'CASCADE' });
@@ -28,4 +30,10 @@ historial_medico_1.default.belongsTo(usuario_1.default, { foreignKey: 'rut_pacie
 // Asociación de Factura con CitaMedica
 factura_1.default.belongsTo(cita_medica_1.default, { foreignKey: 'id_cita', targetKey: 'idCita', as: 'citaMedica', onDelete: 'CASCADE' });
 historial_medico_1.default.belongsTo(medico_1.default, { foreignKey: 'rut_medico', targetKey: 'rut', as: 'medico', onDelete: 'CASCADE' });
+// Asociaciones de roles
+usuario_1.default.belongsTo(rol_1.default, { foreignKey: 'rolId', as: 'rol' });
+rol_1.default.hasMany(usuario_1.default, { foreignKey: 'rolId' });
+// Nuevas asociaciones para Medico
+medico_1.default.belongsTo(rol_1.default, { foreignKey: 'rolId', as: 'rol' });
+rol_1.default.hasMany(medico_1.default, { foreignKey: 'rolId' });
 //# sourceMappingURL=associations.js.map

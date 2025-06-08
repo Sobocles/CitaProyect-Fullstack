@@ -1,42 +1,88 @@
-<form [formGroup]="formularioTipoCita" (ngSubmit)="onSubmit()">
-  <div class="form-group mb-3">
-    <label for="especialidad_medica">Especialidad Médica</label>
-    <input type="text" id="especialidad_medica" formControlName="especialidad_medica" class="form-control">
-  </div>
-  
-  <div class="form-group mb-3">
-    <label for="precio">Precio</label>
-    <input type="text" id="precio" formControlName="precio" class="form-control">
-    <div *ngIf="formularioTipoCita.controls['precio'].touched">
-      <div *ngIf="formularioTipoCita.controls['precio'].hasError('required')" class="alert alert-danger">
-        El precio es requerido.
-      </div>
-      <div *ngIf="formularioTipoCita.controls['precio'].hasError('pattern')" class="alert alert-danger">
-        Solo se permiten números enteros sin ceros a la izquierda.
-      </div>
+<!-- HTML del formulario mejorado -->
+<div class="container-fluid py-4">
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">{{ isEditMode ? 'Editar Tipo de Cita' : 'Nuevo Tipo de Cita' }}</h5>
     </div>
-  </div>
+    <div class="card-body p-4">
+      <form [formGroup]="formularioTipoCita" (ngSubmit)="onSubmit()">
+        <div class="form-group mb-4">
+          <label for="especialidad_medica" class="form-label fw-bold">Especialidad Médica</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light">
+              <i class="fas fa-user-md"></i>
+            </span>
+            <input type="text" id="especialidad_medica" formControlName="especialidad_medica" 
+                   class="form-control form-control-lg" placeholder="Ej: Cardiología">
+          </div>
+          <div *ngIf="formularioTipoCita.controls['especialidad_medica'].touched && 
+                      formularioTipoCita.controls['especialidad_medica'].hasError('required')" 
+               class="text-danger mt-1 small">
+            <i class="fas fa-exclamation-circle me-1"></i>La especialidad médica es requerida
+          </div>
+        </div>
+      
+        <div class="form-group mb-4">
+          <label for="precio" class="form-label fw-bold">Precio</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light">$</span>
+            <input type="text" id="precio" formControlName="precio" 
+                   class="form-control form-control-lg" placeholder="Ej: 500">
+          </div>
+          <div *ngIf="formularioTipoCita.controls['precio'].touched">
+            <div *ngIf="formularioTipoCita.controls['precio'].hasError('required')" 
+                 class="text-danger mt-1 small">
+              <i class="fas fa-exclamation-circle me-1"></i>El precio es requerido
+            </div>
+            <div *ngIf="formularioTipoCita.controls['precio'].hasError('pattern')" 
+                 class="text-danger mt-1 small">
+              <i class="fas fa-exclamation-circle me-1"></i>Solo se permiten números enteros sin ceros a la izquierda
+            </div>
+          </div>
+        </div>
 
-  <div class="form-group mb-3">
-    <label for="duracion_cita">Duración de la Cita (solo minutos, duración máxima 180 minutos)</label>
-    <input type="text" id="duracion_cita" formControlName="duracion_cita" class="form-control">
-    <div *ngIf="formularioTipoCita.controls['duracion_cita'].touched">
-      <div *ngIf="formularioTipoCita.controls['duracion_cita'].hasError('required')" class="alert alert-danger">
-        La duración de la cita es requerida.
-      </div>
-      <div *ngIf="formularioTipoCita.controls['duracion_cita'].hasError('pattern')" class="alert alert-danger">
-        Solo se permiten números enteros para representar minutos.
-      </div>
-      <div *ngIf="formularioTipoCita.controls['duracion_cita'].hasError('max')" class="alert alert-danger">
-        La duración de la cita no puede exceder los 180 minutos (3 hrs).
-      </div>
-    </div>
-    <div *ngIf="formularioTipoCita.controls['duracion_cita']?.valid && formularioTipoCita.get('duracion_cita')?.value">
-      {{ convertirMinutosAHoras(formularioTipoCita.get('duracion_cita')?.value) }}
+        <div class="form-group mb-4">
+          <label for="duracion_cita" class="form-label fw-bold">Duración de la Cita</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light">
+              <i class="fas fa-clock"></i>
+            </span>
+            <input type="text" id="duracion_cita" formControlName="duracion_cita" 
+                   class="form-control form-control-lg" placeholder="Máximo 180 minutos">
+            <span class="input-group-text bg-light">min</span>
+          </div>
+          <small class="text-muted">Solo minutos, duración máxima 180 minutos (3 horas)</small>
+          
+          <div *ngIf="formularioTipoCita.controls['duracion_cita'].touched">
+            <div *ngIf="formularioTipoCita.controls['duracion_cita'].hasError('required')" 
+                 class="text-danger mt-1 small">
+              <i class="fas fa-exclamation-circle me-1"></i>La duración de la cita es requerida
+            </div>
+            <div *ngIf="formularioTipoCita.controls['duracion_cita'].hasError('pattern')" 
+                 class="text-danger mt-1 small">
+              <i class="fas fa-exclamation-circle me-1"></i>Solo se permiten números enteros para representar minutos
+            </div>
+            <div *ngIf="formularioTipoCita.controls['duracion_cita'].hasError('max')" 
+                 class="text-danger mt-1 small">
+              <i class="fas fa-exclamation-circle me-1"></i>La duración de la cita no puede exceder los 180 minutos (3 hrs)
+            </div>
+          </div>
+          
+          <div *ngIf="formularioTipoCita.controls['duracion_cita']?.valid && formularioTipoCita.get('duracion_cita')?.value" 
+               class="mt-2 text-primary fw-bold">
+            <i class="fas fa-info-circle me-1"></i>{{ convertirMinutosAHoras(formularioTipoCita.get('duracion_cita')?.value) }}
+          </div>
+        </div>
+      
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+          <button type="button" class="btn btn-outline-secondary me-md-2" routerLink="/gestionar-tipo-cita">
+            <i class="fas fa-times me-1"></i>Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="!formularioTipoCita.valid">
+            <i class="fas fa-save me-1"></i>{{ isEditMode ? 'Guardar Cambios' : 'Crear Tipo Cita' }}
+          </button>
+        </div>
+      </form>
     </div>
   </div>
-  
-  <button type="submit" class="btn btn-primary" [disabled]="!formularioTipoCita.valid">
-    {{ isEditMode ? 'Guardar Cambios' : 'Crear Tipo Cita' }}
-  </button>
-</form>
+</div>

@@ -17,7 +17,7 @@ export interface CitaMedicaAttributes {
   descripcion?: string;
   idTipoCita?: number;
   estado_actividad?: string; 
-
+  tipoCita?: TipoCita; 
 }
 
 export class CitaMedica extends Model<CitaMedicaAttributes> {
@@ -32,6 +32,7 @@ export class CitaMedica extends Model<CitaMedicaAttributes> {
   public descripcion?: string;
   public idTipoCita?: number;
   public estado_actividad!: string;
+  public tipoCita?: TipoCita;
   // Asociaciones
   public readonly medico?: Medico;
   public readonly paciente?: Usuario;
@@ -39,6 +40,7 @@ export class CitaMedica extends Model<CitaMedicaAttributes> {
   public static associations: {
     medico: Association<CitaMedica, Medico>;
     paciente: Association<CitaMedica, Usuario>;
+
   };
 }
 

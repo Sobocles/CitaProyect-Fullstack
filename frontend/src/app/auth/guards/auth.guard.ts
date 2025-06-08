@@ -12,22 +12,35 @@ export class AuthGuard implements CanActivate, CanLoad {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): Observable<boolean> | boolean {
-    console.log('Se esta ejecutando el can activate'); // Agrega esta línea para verificar la ejecución
+    console.log('🛡️ AuthGuard - canActivate iniciado');
     return this.authService.validarToken().pipe(
       tap((valid) => {
-        console.log(valid);
+        console.log('🛡️ Resultado de validación de token:', valid);
         if (!valid) {
+          console.log('🛡️ Redireccionando a /auth porque el token no es válido');
           this.router.navigate(['/auth']);
+        } else {
+          console.log('🛡️ Token válido, permitiendo navegación');
+          // Verificar explícitamente qué tipo de usuario está autenticado
+          if (this.authService.usuario) {
+            console.log('🛡️ Usuario autenticado:', this.authService.usuario);
+          } else if (this.authService.medico) {
+            console.log('🛡️ Médico autenticado:', this.authService.medico);
+          } else {
+            console.log('🛡️ ALERTA: No hay usuario ni médico autenticado a pesar de token válido');
+          }
         }
       })
     );
   }
-
+  
   canLoad(): Observable<boolean> | boolean {
-    console.log('CanLoad is being executed'); // Agrega esta línea para verificar la ejecución
+    console.log('🛡️ AuthGuard - canLoad iniciado');
     return this.authService.validarToken().pipe(
       tap((valid) => {
+        console.log('🛡️ Resultado de validación de token (canLoad):', valid);
         if (!valid) {
+          console.log('🛡️ Redireccionando a /auth porque el token no es válido (canLoad)');
           this.router.navigate(['/auth']);
         }
       })

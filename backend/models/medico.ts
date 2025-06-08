@@ -1,6 +1,7 @@
+// models/medico.ts
 import { DataTypes, Model } from 'sequelize';
 import db from '../db/connection';
-import CitaMedica from './cita_medica';
+import Rol from './rol';
 
 class Medico extends Model {
   public rut!: string;
@@ -12,9 +13,24 @@ class Medico extends Model {
   public foto!: string;
   public nacionalidad!: string;
   public especialidad_medica!: string;
-  public password!: string; // Nueva propiedad para contraseña
-  public rol!: string;      // Nueva propiedad para el rol
+  public password!: string;
+  public rolId!: number;  // Campo real en la BD que relaciona con Rol
+  public rol?: any;       // Propiedad virtual para compatibilidad
   public estado!: string;
+  
+  // Método para obtener el código del rol de manera segura
+  public getRolCodigo(): string {
+    // Si rol es un objeto con propiedad codigo (relación cargada)
+    if (this.rol && typeof this.rol === 'object' && this.rol.codigo) {
+      return this.rol.codigo;
+    }
+    // Si rol es directamente una cadena (compatibilidad con código anterior)
+    if (this.rol && typeof this.rol === 'string') {
+      return this.rol;
+    }
+    // Valor por defecto
+    return 'MEDICO_ROLE';
+  }
 }
 
 Medico.init(
@@ -56,109 +72,30 @@ Medico.init(
     especialidad_medica: {
       type: DataTypes.STRING,
     },
-    password: {  
+    password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    rol: {  
-      type: DataTypes.STRING,
+    rolId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 'MEDICO_ROLE', 
+      references: {
+        model: Rol,
+        key: 'id'
+      },
+      defaultValue: 3 // ID del rol MEDICO_ROLE (asumiendo que es 3)
     },
     estado: {
       type: DataTypes.STRING,
       allowNull: true,
-      defaultValue: 'activo' // Valor por defecto es 'activo'
-  },
+      defaultValue: 'activo'
+    },
   },
   {
-    sequelize: db, // Conecta el modelo a tu instancia de Sequelize
-    modelName: 'Medico', // Nombre de la tabla en la base de datos
-    tableName: 'medicos' // Nombre real de la tabla en la base de datos
+    sequelize: db,
+    modelName: 'Medico',
+    tableName: 'medicos'
   }
 );
 
-// Definir la relación con CitaMedica
-
 export default Medico;
-
-/*
-import { DataTypes, Model } from 'sequelize';
-import db from '../db/connection';
-import CitaMedica from './cita_medica';
-
-class Medico extends Model {
-  public rut!: string;
-  public nombre!: string;
-  public apellidos!: string;
-  public email!: string;
-  public telefono!: string;
-  public direccion!: string;
-  public foto!: string;
-  public nacionalidad!: string;
-  public especialidad_medica!: string;
-  public password!: string; // Nueva propiedad para contraseña
-  public rol!: string;      // Nueva propiedad para el rol
-}
-
-Medico.init(
-  {
-    rut: {
-      type: DataTypes.STRING,
-      primaryKey: true,
-    },
-    nombre: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    apellidos: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    telefono: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true,
-      },
-    },
-    direccion: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    foto: {
-      type: DataTypes.STRING,
-    },
-    nacionalidad: {
-      type: DataTypes.STRING,
-    },
-    especialidad_medica: {
-      type: DataTypes.STRING,
-    },
-    password: {  // Nueva definición para contraseña
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    rol: {  // Nueva definición para rol
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: 'MEDICO_ROLE', // Esto garantiza que, por defecto, el rol sea 'MEDICO'
-    }
-  },
-  {
-    sequelize: db, // Conecta el modelo a tu instancia de Sequelize
-    modelName: 'Medico', // Nombre de la tabla en la base de datos
-    tableName: 'medicos' // Nombre real de la tabla en la base de datos
-  }
-);
-
-// Definir la relación con CitaMedica
-
-export default Medico;
-
-*/

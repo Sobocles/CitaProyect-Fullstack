@@ -1,6 +1,7 @@
+// models/usuario.ts
 import { DataTypes, Model } from 'sequelize';
 import db from '../db/connection';
-import CitaMedica from './cita_medica';
+import Rol from './rol';
 
 class Usuario extends Model {
     public rut!: string;
@@ -11,8 +12,23 @@ class Usuario extends Model {
     public fecha_nacimiento!: string;
     public telefono!: string;
     public direccion!: string;
-    public rol!: string;
-    public estado!: string; // Nuevo campo agregado
+    public rolId!: number; // Campo real en la base de datos
+    public rol?: any; // Propiedad virtual para el objeto rol relacionado o código de rol
+    public estado!: string;
+    
+    // Método para obtener el código del rol de manera segura
+    public getRolCodigo(): string {
+        // Si rol es un objeto con propiedad codigo (relación cargada)
+        if (this.rol && typeof this.rol === 'object' && this.rol.codigo) {
+            return this.rol.codigo;
+        }
+        // Si rol es directamente una cadena (compatibilidad con código anterior)
+        if (this.rol && typeof this.rol === 'string') {
+            return this.rol;
+        }
+        // Valor por defecto
+        return 'USER_ROLE';
+    }
 }
 
 Usuario.init(
@@ -50,15 +66,19 @@ Usuario.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        rol: {
-            type: DataTypes.STRING,
+        rolId: { // Campo real en la base de datos
+            type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 'USER_ROLE',
+            references: {
+                model: Rol,
+                key: 'id'
+            },
+            defaultValue: 2 // Por defecto, ID del rol 'Usuario' (USER_ROLE)
         },
         estado: {
             type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: 'activo' // Estado por defecto es 'activo'
+            defaultValue: 'activo'
         },
     },
     {

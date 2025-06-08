@@ -18,28 +18,7 @@ export class PaymentSuccessComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private CitaMedicaService: CitaMedicaService, public AuthService: AuthService, private router: Router ) {}
 
-  /*
-        ngOnInit() {
-    if (this.authservice.usuario && this.authservice.usuario.rut) { 
-        const rutUsuario = this.authservice.usuario.rut;
-        this.cargarHistorialMedico(rutUsuario);
-    } else {
-        console.error("RUT del usuario no definido o usuario no autenticado");
-    }
 
-     cargarHistorialMedico(rut: string) {
-    this.historialService.obtenerHistorialPorId(rut)
-    .subscribe((historial:HistorialResponse) => {
-      console.log(historial)
-      this.historialMedico = historial.historiales;
-     
-
-    }, error => {
-      console.error("Error al obtener el historial médico:", error);
-    });
-  }
-}
-  */
 
   ngOnInit() {
     console.log(this.AuthService.infoClinica);

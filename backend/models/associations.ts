@@ -1,17 +1,17 @@
-import Usuario from './usuario';
+// models/associations.ts
 import TipoCita from './tipo_cita';
 import CitaMedica from './cita_medica';
 import Medico from './medico';
 import HorarioMedic from './horario_medico';
 import HistorialMedico from './historial_medico';
 import Factura from './factura';
+import Usuario from './usuario';
+import Rol from './rol';
 
 // Asociaciones para Usuario
 Usuario.hasMany(CitaMedica, { foreignKey: 'rut_paciente', sourceKey: 'rut', onDelete: 'CASCADE' });
 Usuario.hasMany(HistorialMedico, { foreignKey: 'rut_paciente', sourceKey: 'rut', onDelete: 'CASCADE' });
-
 TipoCita.hasOne(CitaMedica, { foreignKey: 'idTipoCita', sourceKey: 'idTipoCita', onDelete: 'CASCADE' });
-
 
 // Asociaciones para CitaMedica
 CitaMedica.belongsTo(Usuario, { foreignKey: 'rut_paciente', targetKey: 'rut', as: 'paciente', onDelete: 'CASCADE' });
@@ -31,3 +31,11 @@ HistorialMedico.belongsTo(Usuario, { foreignKey: 'rut_paciente', targetKey: 'rut
 Factura.belongsTo(CitaMedica, { foreignKey: 'id_cita', targetKey: 'idCita', as: 'citaMedica', onDelete: 'CASCADE' });
 
 HistorialMedico.belongsTo(Medico, { foreignKey: 'rut_medico', targetKey: 'rut', as: 'medico', onDelete: 'CASCADE' });
+
+// Asociaciones de roles
+Usuario.belongsTo(Rol, { foreignKey: 'rolId', as: 'rol' });
+Rol.hasMany(Usuario, { foreignKey: 'rolId' });
+
+// Nuevas asociaciones para Medico
+Medico.belongsTo(Rol, { foreignKey: 'rolId', as: 'rol' });
+Rol.hasMany(Medico, { foreignKey: 'rolId' });

@@ -27,7 +27,7 @@ router.post('/', [
     (0, express_validator_1.check)('email', 'El email es obligatorio').isEmail(),
     (0, express_validator_1.check)('direccion', 'La dirección es obligatoria').not().isEmpty(),
     // Agrega más validaciones según tus necesidades
-], medico_1.default.instance.CrearMedico);
+], medico_1.default.instance.crearMedico);
 router.post('/cambiarPassword', [], medico_1.default.instance.cambiarPasswordMedico);
 router.put('/:rut', [], medico_1.default.instance.putMedico);
 router.delete('/:rut', [

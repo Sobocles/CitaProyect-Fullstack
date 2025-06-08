@@ -9,11 +9,10 @@ import tipo_cita from '../routes/tipo_cita'
 import busquedaRoute from '../routes/busquedas'
 import HorarioClinicaRoutes from '../routes/horario_clinica';
 import busqueda_citaRoutes from '../routes/busqueda_cita'
-import paypalRoutes from '../routes/payments.routes'
 import mercadoPagoRoutes from '../routes/mercadoPago'
 
 
-const cors = require('cors');
+import cors from 'cors';
 import db from '../db/connection';
 import { PORT } from '../global/enviorenment';
 
@@ -61,13 +60,11 @@ class Server {
         // CORS
         
 
-        const corsOptions = {
-          origin: 'http://localhost:4200', // Reemplaza esto con la URL de tu frontend Angular
-          methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-          credentials: true, // Habilita el envío de cookies u otras credenciales si es necesario
-        };
-        
-        this.app.use(cors(corsOptions));
+        this.app.use(cors({
+            origin: '*',
+            methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+            credentials: true
+          }));
 
         // Lectura del body
         this.app.use(express.json());
@@ -89,7 +86,6 @@ class Server {
         this.app.use(this.apiPaths.busqueda, busquedaRoute )
         this.app.use(this.apiPaths.horario_clinica, HorarioClinicaRoutes  )
         this.app.use(this.apiPaths.busqueda_cita, busqueda_citaRoutes  )
-        this.app.use(this.apiPaths.paypal, paypalRoutes  )
         this.app.use(this.apiPaths.mercadoPago, mercadoPagoRoutes  )
     
     }

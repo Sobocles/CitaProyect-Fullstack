@@ -1,41 +1,91 @@
 <mat-sidenav-container fullscreen>
-
-  <mat-sidenav #sidenav mode="push" [ngStyle]="{ width: '350px' }">
-      <mat-toolbar>
-          <span>Menú</span>
-          <span class="spacer"></span>
-          <button mat-icon-button (click)="sidenav.toggle()">
-              <mat-icon>menu</mat-icon>
-          </button>
-      </mat-toolbar>
-
-      <mat-nav-list>
-          <mat-list-item
-              *ngFor="let item of sidebarService.menu"
-              [routerLink]="item.url"
-              (click)="sidenav.toggle()"
-          >
-              <mat-icon matListItemIcon></mat-icon>
-              {{ item.label }}
-          </mat-list-item>
-      </mat-nav-list>
-  </mat-sidenav>
-
-  <mat-toolbar color="primary">
-      <button mat-icon-button (click)="sidenav.toggle()">
-          <mat-icon>menu</mat-icon>
-      </button>
- 
-      <span class="spacer"></span>
-      <button mat-button (click)="onLogout()">Salir</button>
-      <span class="user-info" *ngIf="authService.usuario">
-       
-    </span>
-  </mat-toolbar>
+    <!-- Sidebar permanentemente visible con ancho aumentado -->
+    <mat-sidenav #sidenav mode="side" opened [ngStyle]="{ width: '320px' }" class="permanent-sidenav">
+      <div class="sidebar-header">
+        <div class="user-profile" *ngIf="authService.usuario || authService.medico">
+          <div class="avatar">
+            <mat-icon class="avatar-icon">account_circle</mat-icon>
+          </div>
+          <div class="user-info">
+            <h3 class="user-name">
+              {{ authService.usuario ? authService.usuario.nombre + ' ' + authService.usuario.apellidos :
+                authService.medico ? authService.medico.nombre + ' ' + authService.medico.apellidos : 'Usuario' }}
+            </h3>
+            <span class="user-role">
+              {{ authService.usuario ? authService.usuario.rol :
+                authService.medico ? authService.medico.rol : '' | titlecase }}
+            </span>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+      </div>
   
-
-  <div class="container p-2">
-      <router-outlet></router-outlet>
-  </div>
-
-</mat-sidenav-container>
+      <mat-nav-list class="menu-list">
+        <div class="menu-category" *ngFor="let category of groupedMenu | keyvalue">
+          <h3 class="menu-category-title">{{ category.key }}</h3>
+          <a mat-list-item
+            *ngFor="let item of category.value"
+            [routerLink]="item.url"
+            routerLinkActive="active-link"
+            class="menu-item">
+            <mat-icon matListItemIcon>{{ item.icon || 'arrow_right' }}</mat-icon>
+            <span class="menu-item-text">{{ item.label }}</span>
+          </a>
+        </div>
+      </mat-nav-list>
+      
+      <div class="sidebar-footer">
+        <mat-divider></mat-divider>
+        <div class="clinic-info" *ngIf="authService.infoClinica">
+          <h4>{{ authService.infoClinica.nombreClinica }}</h4>
+          <p class="clinic-contact">{{ authService.infoClinica.telefono }}</p>
+        </div>
+        
+        <!-- Botón de cerrar sesión -->
+        <button mat-flat-button class="logout-button" (click)="onLogout()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Cerrar Sesión</span>
+        </button>
+      </div>
+    </mat-sidenav>
+  
+    <!-- Contenido principal -->
+    <mat-sidenav-content>
+      <mat-toolbar color="primary">
+        <span class="clinic-name" *ngIf="authService.infoClinica">
+          {{ authService.infoClinica.nombreClinica }}
+        </span>
+        
+        <span class="spacer"></span>
+        
+        <div class="user-toolbar-info" *ngIf="authService.usuario || authService.medico">
+          <span class="username">
+            {{ authService.usuario ? authService.usuario.nombre :
+               authService.medico ? authService.medico.nombre : '' }}
+          </span>
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>account_circle</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>person</mat-icon>
+              <span>Mi Perfil</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>settings</mat-icon>
+              <span>Configuración</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="onLogout()">
+              <mat-icon>exit_to_app</mat-icon>
+              <span>Cerrar Sesión</span>
+            </button>
+          </mat-menu>
+        </div>
+      </mat-toolbar>
+  
+      <div class="main-content">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>

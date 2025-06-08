@@ -43,7 +43,7 @@ router.post(
       // Agrega más validaciones según tus necesidades
       
     ],
-    Medicos.instance.CrearMedico
+    Medicos.instance.crearMedico
   );
 
   router.post(

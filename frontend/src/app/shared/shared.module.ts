@@ -4,7 +4,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { MaterialModule } from '../material/material.module';
 import { RouterModule } from '@angular/router';
 import { PaginatorComponent } from './paginator/paginator.component';
-
+import { MatMenuModule } from '@angular/material/menu';
 
 
 
@@ -18,7 +18,8 @@ import { PaginatorComponent } from './paginator/paginator.component';
   imports: [
     CommonModule,
     MaterialModule,
-    RouterModule
+    RouterModule,
+    MatMenuModule,
   ],
   exports: [DashboardComponent, PaginatorComponent],
 })

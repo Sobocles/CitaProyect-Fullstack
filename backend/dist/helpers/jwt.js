@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// BACKEND/helpers/jwt.ts
 const jsonwebtoken_1 = require("jsonwebtoken");
 const enviorenment_1 = require("../global/enviorenment");
 class JwtGenerate {
@@ -26,6 +27,7 @@ class JwtGenerate {
                     reject(error);
                 }
                 else {
+                    // Sabemos que token será un string si no hay error
                     resolve(token);
                 }
             });

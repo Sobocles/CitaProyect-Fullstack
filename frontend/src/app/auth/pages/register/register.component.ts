@@ -13,9 +13,8 @@ import { passwordStrengthValidator } from 'src/app/shared/Validators/password-st
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-
   miFormulario: FormGroup;
-
+  
   constructor(private fb: FormBuilder, private AuthService: AuthService, private router: Router) {
     this.miFormulario = this.fb.group({
       rut: ['', [Validators.required, rutValidator()]],
@@ -28,7 +27,31 @@ export class RegisterComponent implements OnInit {
       direccion: ['', Validators.required]
     });
   }
-
+  
+  ngOnInit(): void {
+  }
+  
+  // Métodos para verificar requisitos de contraseña individualmente
+  hasUpperCase(): boolean {
+    const value = this.miFormulario.get('password')?.value;
+    return !!value && /[A-Z]+/.test(value);
+  }
+  
+  hasNumber(): boolean {
+    const value = this.miFormulario.get('password')?.value;
+    return !!value && /[0-9]+/.test(value);
+  }
+  
+  hasSpecialChar(): boolean {
+    const value = this.miFormulario.get('password')?.value;
+    return !!value && /[.,'!@#$%^&*()_+-]+/.test(value);
+  }
+  
+  hasMinLength(): boolean {
+    const value = this.miFormulario.get('password')?.value;
+    return !!value && value.length >= 6;
+  }
+  
   validarMayorDeEdad(edadMinima: number): ValidatorFn {
     return (control: AbstractControl): {[key: string]: any} | null => {
       const valor = control.value;
@@ -36,30 +59,31 @@ export class RegisterComponent implements OnInit {
       const fechaNacimiento = new Date(valor);
       let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
       const m = hoy.getMonth() - fechaNacimiento.getMonth();
-  
+ 
       if (m < 0 || (m === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
         edad--;
       }
-  
+ 
       return edad >= edadMinima ? null : {'menorDeEdad': {value: control.value}};
     };
   }
-
- 
-
-
-  ngOnInit(): void {
-  }
-
-
+  
   registrar() {
     if (this.miFormulario.invalid) {
       this.miFormulario.markAllAsTouched();
+      
+      // Mostrar mensaje de formulario incompleto
+      Swal.fire({
+        icon: 'warning',
+        title: 'Formulario incompleto',
+        text: 'Por favor, complete todos los campos requeridos correctamente.',
+        confirmButtonText: 'Entendido'
+      });
       return;
     }
-  
+ 
     const formData = this.miFormulario.value;
-  
+ 
     this.AuthService.crearUsuario(formData).subscribe(
       (respuesta) => {
         Swal.fire({
@@ -84,8 +108,4 @@ export class RegisterComponent implements OnInit {
       }
     );
   }
-  
-  
-  
-
 }

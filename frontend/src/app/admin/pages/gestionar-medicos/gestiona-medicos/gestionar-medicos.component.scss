@@ -1,31 +1,72 @@
 .icon-container {
-    display: inline-block; /* Alinea los elementos en línea */
-    vertical-align: middle; /* Ajusta la alineación vertical según tus preferencias */
-    margin-right: 10px; /* Puedes ajustar el margen según tus preferencias */
-  }
-
-  .cursor {
-    cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px;
 }
 
-.icon-delete {
-  margin-right: 15px; /* o el valor que desees para la separación */
+.cursor {
+  cursor: pointer;
 }
 
-table {
+/* Estilo para los botones */
+.btn-group .btn {
+  transition: all 0.3s ease;
+}
+
+/* Estilos para la tabla */
+.table {
   width: 100%;
-  table-layout: fixed; /* Fuerza un ancho fijo para todas las columnas */
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-table th,
-table td {
-  white-space: nowrap;      /* Evita que el texto se rompa en varias líneas */
-  overflow: hidden;        
-  text-overflow: ellipsis;  
+.table th,
+.table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
 }
 
+/* Mejoras para los botones de acción */
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+}
 
+/* Estilos para las tarjetas */
+.card {
+  border-radius: 0.5rem;
+  border: none;
+  transition: all 0.3s ease;
+}
 
+.card-header {
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  padding: 1rem 1.5rem;
+}
 
+.shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
 
+/* Estilo para el mensaje de alerta */
+.alert {
+  border-left: 4px solid #ffc107;
+}
 
+/* Estilo para la fila al pasar el mouse */
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+/* Estilo para los badges */
+.badge {
+  font-weight: 500;
+  padding: 0.35em 0.65em;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}

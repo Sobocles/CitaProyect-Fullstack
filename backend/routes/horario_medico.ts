@@ -1,43 +1,32 @@
 import { Router } from 'express';
-import HorarioMedico from '../controllers/horario_medico';
-
+import { horarioMedicoController } from '../controllers/HorarioMedicoController';
 import validarCampos from '../middlewares/validar-campos';
-import ValidarJwt from '../middlewares/validar-jwt';
-
 
 const router = Router();
 
-router.get('/',[
-
-   
-    validarCampos.instance.validarCampos
-],HorarioMedico.instance.getHorariosMedicos );
+router.get('/', [
+    validarCampos.instance.validarCampos,
+], horarioMedicoController.getHorariosMedicos);
 
 router.get('/:id', [
-
-  validarCampos.instance.validarCampos
-], HorarioMedico.instance.getHorarioMedico );
-
+    validarCampos.instance.validarCampos
+], horarioMedicoController.getHorarioMedico);
 
 router.post(
     '/',
     [
-  
+        // Aquí puedes agregar validaciones si las necesitas
+        validarCampos.instance.validarCampos
+    ], 
+    horarioMedicoController.crearHorarioMedico
+);
 
-      // Puedes agregar más validaciones según tus necesidades
-    ], HorarioMedico.instance.CrearHorarioMedico
-    
-  );
-
-router.put('/:id',
-    [
-     
+router.put('/:id', [
     validarCampos.instance.validarCampos
-    ], HorarioMedico.instance.putHorarioMedico);
+], horarioMedicoController.putHorarioMedico);
 
-router.delete('/:id',[
- 
+router.delete('/:id', [
     validarCampos.instance.validarCampos
-], HorarioMedico.instance.deleteHorarioMedico );
+], horarioMedicoController.deleteHorarioMedico);
 
- export default router;
+export default router;

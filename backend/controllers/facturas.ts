@@ -1,7 +1,4 @@
 import { Request, Response } from 'express';
-
-
-
 import Factura from '../models/factura';
 import CitaMedica from '../models/cita_medica';
 import Usuario from '../models/usuario';

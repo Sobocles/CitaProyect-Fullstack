@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../db/connection';
 import CitaMedica from './cita_medica'; // Asegúrate de que este importe es correcto
+import Medico from './medico';
 
 class TipoCita extends Model {
   public idTipoCita!: number;
@@ -8,7 +9,8 @@ class TipoCita extends Model {
   public precio!: number;
   public especialidad_medica!: string;
   public duracion_cita!: number;
-  public estado!: string; // Nuevo campo agregado
+  public estado!: string; 
+  public medicos?: Medico[];
 }
 
 TipoCita.init(

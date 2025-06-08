@@ -16,257 +16,218 @@ exports.receiveWebhook = exports.createOrder = void 0;
 const mercadopago_1 = __importDefault(require("mercadopago"));
 const factura_1 = __importDefault(require("../models/factura"));
 const cita_medica_1 = __importDefault(require("../models/cita_medica"));
-const medico_1 = __importDefault(require("../models/medico"));
-const usuario_1 = __importDefault(require("../models/usuario"));
 const emails_1 = __importDefault(require("../helpers/emails"));
+const connection_1 = __importDefault(require("../db/connection"));
 const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("ENTRO A CREATE ORDER");
     mercadopago_1.default.configure({
-        access_token: 'APP_USR-4655127474104645-110520-a5b6fd70292cb7889f38a9132bb7b08f-1537929468',
+        access_token: 'TEST-884031095793760-111819-b2ad3ea11301ffbeab5f5eaef06ad47f-293343090',
     });
-    /*  const { motivo, precio, idCita } = req.body; */
-    const motivo = req.body.motivo; // o cualquier otro tipo que se espera aquí
-    const precio = req.body.precio;
-    const idCita = req.body.idCita;
-    console.log(motivo);
-    console.log(precio);
-    console.log(idCita);
-    const preference = {
-        items: [
-            {
-                title: motivo,
-                unit_price: precio,
-                currency_id: 'CLP',
-                quantity: 1,
-            }
-        ],
-        //success: "http://localhost:8000/api/mercadoPago/success",
-        external_reference: `${idCita}`,
-        back_urls: {
-            success: `http://localhost:4200/payment-success?idCita=${idCita}`,
-            failure: "http://localhost:4200/payment-failure",
-            pending: "http://localhost:8000/api/mercadoPago/pending"
-        },
-        //.\ngrok.exe http 8000
-        //.\ngrok http --region=sa 8000
-        //.\ngrok http --region=us 8000
-        notification_url: 'https://d261-2800-150-14e-fe7-a1af-e042-20d9-b0e0.ngrok.io/api/mercadoPago/webhook'
-    };
+    const { motivo, precio, idCita } = req.body;
     try {
-        const result = yield mercadopago_1.default.preferences.create(preference);
-        console.log('aqui esta el resultado', result);
-        res.send(result.response);
+        // Crear preferencia de pago con auto_return
+        const preference = {
+            items: [
+                {
+                    title: motivo,
+                    unit_price: precio,
+                    currency_id: 'CLP',
+                    quantity: 1,
+                }
+            ],
+            external_reference: idCita.toString(),
+            back_urls: {
+                success: `https://5d39-2800-150-14e-1f21-4807-a76f-df08-dd8b.ngrok-free.app/payment-success?idCita=${idCita}`,
+                failure: "https://5d39-2800-150-14e-1f21-4807-a76f-df08-dd8b.ngrok-free.app/payment-failure",
+                pending: "https://5d39-2800-150-14e-1f21-4807-a76f-df08-dd8b.ngrok-free.app/api/mercadoPago/pending"
+            },
+            notification_url: 'https://685c-2800-150-14e-1f21-4807-a76f-df08-dd8b.ngrok-free.app/api/mercadoPago/webhook',
+            // AÑADIR AUTO_RETURN PARA REDIRECCIÓN AUTOMÁTICA
+            auto_return: "approved",
+        };
+        const response = yield mercadopago_1.default.preferences.create(preference);
+        res.json({
+            ok: true,
+            id: response.body.id,
+            init_point: response.body.init_point,
+            sandbox_init_point: response.body.sandbox_init_point
+        });
     }
     catch (error) {
-        const e = error;
-        console.log('aqui el error', e);
-        res.status(500).send(e.message);
+        const err = error;
+        console.error('Error en createOrder:', err);
+        res.status(500).json({
+            error: 'Error al generar el link de pago',
+            detalle: err.message
+        });
     }
 });
 exports.createOrder = createOrder;
+// Update your receiveWebhook function in controllers/mercadoPago.ts
 const receiveWebhook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('aqui esta el req.query', req.query);
+    console.log('===== WEBHOOK RECIBIDO =====');
+    console.log('Método:', req.method);
+    console.log('Headers:', req.headers);
+    console.log('Body:', req.body); // Agrega esto para ver el cuerpo completo
     try {
-        const paymentIdStr = req.query["data.id"];
-        const paymentType = req.query.type;
-        console.log('aqui el', paymentIdStr);
-        console.log('y aca tambien', paymentType);
-        if (paymentType === "payment" && paymentIdStr) {
-            const paymentIdNum = parseInt(paymentIdStr, 10);
-            if (!isNaN(paymentIdNum)) {
-                const paymentData = yield mercadopago_1.default.payment.findById(paymentIdNum);
-                console.log('Payment Data:', paymentData);
-                // Aquí se asume que la respuesta de MercadoPago viene en el formato esperado
-                if (paymentData.status === 200 && paymentData.response) {
-                    const { response } = paymentData;
-                    const fechaAprobacionPago = response.date_approved;
-                    // Crear el objeto factura con los datos relevantes
-                    const facturaData = {
-                        id_cita: parseInt(response.external_reference, 10),
-                        payment_method_id: response.payment_method_id,
-                        transaction_amount: response.transaction_amount,
-                        payment_status: response.status,
-                        status_detail: response.status_detail,
-                        monto_pagado: response.transaction_amount,
-                        estado_pago: response.status === 'approved' ? 'completado' : 'pendiente',
-                        fecha_pago: new Date(fechaAprobacionPago)
-                    };
-                    console.log('AQUI ESTA LA FACTURA', facturaData);
-                    // Guardar en la base de datos
-                    const nuevaFactura = yield factura_1.default.create(facturaData);
-                    console.log('Nueva factura creada:', nuevaFactura);
-                    if (response.status === 'approved') {
-                        yield cita_medica_1.default.update({ estado: 'pagado' }, { where: { idCita: facturaData.id_cita } });
-                    }
-                    const cita = yield cita_medica_1.default.findOne({
-                        where: { idCita: facturaData.id_cita },
-                        include: [{
-                                model: medico_1.default,
-                                as: 'medico',
-                            }, {
-                                model: usuario_1.default,
-                                as: 'paciente',
-                            }]
-                    });
-                    if (cita && cita.medico && cita.paciente) {
-                        // Preparar los detalles para el correo electrónico
-                        const detallesCita = {
-                            fecha: cita.fecha,
-                            hora_inicio: cita.hora_inicio,
-                            medicoNombre: `${cita.medico.nombre} ${cita.medico.apellidos}`,
-                            especialidad: cita.medico.especialidad_medica,
-                            pacienteNombre: `${cita.paciente.nombre} ${cita.paciente.apellidos}`,
-                            emailPaciente: cita.paciente.email,
-                        };
-                        try {
-                            yield emails_1.default.instance.enviarConfirmacionCita(detallesCita);
-                            console.log('Correo de confirmación enviado al paciente:', detallesCita.emailPaciente);
-                        }
-                        catch (error) {
-                            console.error('Error al enviar correo de confirmación:', error);
-                        }
-                    }
-                    res.sendStatus(200);
-                }
-                else {
-                    // Manejar situaciones donde la respuesta no es exitosa
-                    console.error('Payment not found or error with payment data');
-                    res.sendStatus(404);
-                }
+        let paymentId;
+        let idCita;
+        // 1. Solo procesar notificaciones de tipo 'payment'
+        if (req.body.type === 'payment') {
+            paymentId = Number(req.body.data.id);
+            console.log('Payment ID recibido:', paymentId);
+            // 2. Obtener pago con reintentos mejorados
+            const payment = yield obtenerPagoConReintentos(paymentId, 10, 5000); // 10 reintentos, 5 segundos
+            console.log("aqui el payment", payment);
+            console.log("aqui el payment", payment.status);
+            // 3. Validar external_reference críticamente
+            idCita = parseInt(payment.external_reference, 10);
+            if (isNaN(idCita)) {
+                throw new Error(`External reference inválido: ${payment.external_reference}`);
             }
-            else {
-                // Manejar el caso donde paymentId no es un número válido
-                console.error('Invalid payment ID');
-                res.sendStatus(400);
+            // 4. Procesar solo si está aprobado
+            if (payment.status === 'approved') {
+                yield procesarPagoExitoso(paymentId, idCita, payment.transaction_amount);
             }
         }
-        else {
-            // Manejar otros casos, como cuando paymentType no es 'payment'
-            console.error('Not a payment type or missing payment ID');
-            res.sendStatus(400);
-        }
+        res.status(200).send('OK');
     }
     catch (error) {
-        console.error('Error in receiveWebhook:', error);
-        res.status(500).json({ error: error.message });
+        console.error('Error crítico en webhook:', {
+            error: error.message,
+            stack: error.stack,
+            body: req.body
+        });
+        res.status(200).send('OK'); // Siempre responder OK a MP
     }
 });
 exports.receiveWebhook = receiveWebhook;
-/*
-//ESTA FUNCION ESCUCHA EVENTOS QUE LLEGAN DESDE MERCADO PAGO
-/*
-export const receiveWebhook = async (req: Request, res: Response) => {
-try {
-console.log('Webhook received:', req.query);
-const eventId: string = req.query.id as string;
-const eventType: string = req.query.topic as string;
-
-console.log('Event Type:', eventType);
-console.log('Event ID String:', eventId);
-
-if (eventType === "merchant_order" && eventId) {
-  const eventIdNum = parseInt(eventId, 10);
-  console.log('Event ID Number:', eventIdNum);
-
-  if (!isNaN(eventIdNum)) {
-    const orderData = await mercadopago.merchant_orders.findById(eventIdNum);
-    console.log('Order Data:', orderData);
-
-    // Aquí se asume que la respuesta de MercadoPago viene en el formato esperado
-    if (orderData.status === 200 && orderData.response) {
-      const { response } = orderData;
-      console.log('aqui la respuesta',response);
-      const fechaAprobacionPago = response.date_approved;
-      // Crear el objeto factura con los datos relevantes
-      const facturaData = {
-        id_cita: parseInt(response.external_reference, 10),
-        payment_method_id: response.payment_method_id,
-        transaction_amount: response.transaction_amount,
-        payment_status: response.status, // Asumiendo que 'status' es un campo válido
-        status_detail: response.status_detail,
-        monto_pagado: response.transaction_amount, // Asumiendo que esto es el monto pagado
-        estado_pago: response.status === 'approved' ? 'completado' : 'pendiente',
-        fecha_pago: new Date(fechaAprobacionPago)
-      };
-
-      console.log('AQUI ESTA LA FACTURA',facturaData);
-
-      // Guardar en la base de datos
-      const nuevaFactura = await Factura.create(facturaData);
-      console.log('Nueva factura creada:', nuevaFactura);
-
-      if (response.status === 'approved') {
-        await CitaMedica.update(
-          { estado: 'pagado' },
-          { where: { idCita: facturaData.id_cita } }
-        );
-      }
-
-      const cita = await CitaMedica.findOne({
-        where: { idCita: facturaData.id_cita },
-        include: [{
-          model: Medico,
-          as: 'medico',
-        }, {
-          model: Usuario,
-          as: 'paciente',
-        }]
-      });
-    
-    
-      if (cita && cita.medico && cita.paciente) {
-        // Preparar los detalles para el correo electrónico
-        const detallesCita = {
-          fecha: cita.fecha,
-          hora_inicio: cita.hora_inicio,
-          medicoNombre: `${cita.medico.nombre} ${cita.medico.apellidos}`,
-          especialidad: cita.medico.especialidad_medica,
-          pacienteNombre: `${cita.paciente.nombre} ${cita.paciente.apellidos}`,
-          emailPaciente: cita.paciente.email,
-      
-        };
-        
-      
-        try {
-          await Email.instance.enviarConfirmacionCita(detallesCita);
-          console.log('Correo de confirmación enviado al paciente:', detallesCita.emailPaciente);
-        } catch (error) {
-          console.error('Error al enviar correo de confirmación:', error);
+// ========= Funciones Auxiliares Mejoradas =========
+function procesarMerchantOrder(merchantOrderId) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        yield new Promise(resolve => setTimeout(resolve, 3000));
+        const merchantOrder = yield mercadopago_1.default.merchant_orders.findById(merchantOrderId);
+        console.log("merchantOrder", merchantOrder);
+        if (!((_a = merchantOrder.body.payments) === null || _a === void 0 ? void 0 : _a.length)) {
+            console.log('Orden sin pagos asociados');
+            return null;
         }
-      }
-
-      
-
-      res.sendStatus(200);
-    } else {
-      // Manejar situaciones donde la respuesta no es exitosa
-      console.error('Payment not found or error with payment data');
-      res.sendStatus(404);
-    }
-  } else {
-    // Manejar el caso donde paymentId no es un número válido
-    console.error('Invalid payment ID');
-    res.sendStatus(400);
-  }
-} else {
-  // Manejar otros casos, como cuando paymentType no es 'payment'
-  console.error('Not a payment type or missing payment ID');
-  res.sendStatus(400);
+        const payment = merchantOrder.body.payments[0];
+        console.log("payment", payment);
+        return {
+            paymentId: Number(payment.id),
+            idCita: parseInt(merchantOrder.body.external_reference, 10)
+        };
+    });
 }
-} catch (error: any) {
-console.error('Error in receiveWebhook:', error);
-res.status(500).json({ error: error.message });
+function obtenerPagoConReintentos(paymentId, maxRetries = 10, baseDelay = 5000) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let retries = 0;
+        while (retries < maxRetries) {
+            try {
+                const { body } = yield mercadopago_1.default.payment.findById(paymentId);
+                // CORRECIÓN: Mostrar el ID del pago, no el body completo
+                console.log(`✅ Pago ${paymentId} obtenido en intento ${retries + 1}`);
+                console.log(`Status del pago: ${body.status}`);
+                console.log(`External reference: ${body.external_reference}`);
+                return body;
+            }
+            catch (error) {
+                if (error.status === 404) {
+                    const delay = baseDelay * Math.pow(2, retries);
+                    console.log(`⌛ Reintento ${retries + 1}/${maxRetries} en ${delay}ms para pago ${paymentId}`);
+                    yield new Promise(resolve => setTimeout(resolve, delay));
+                    retries++;
+                }
+                else {
+                    console.error('Error diferente a 404:', error);
+                    throw error;
+                }
+            }
+        }
+        throw new Error(`❌ Pago ${paymentId} no encontrado después de ${maxRetries} intentos`);
+    });
 }
-};
-
-
-
-export const receiveWebhook = async (req: Request, res: Response) => {
-    console.log(req.query);
-
-    res.send("webhook");
-
-};
-
-
-*/ 
+function procesarPagoExitoso(paymentId, idCita, montoPagado) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log("entro a la funcion de pago exitoso");
+        const transaction = yield connection_1.default.transaction();
+        try {
+            // 1. Obtener cita con relaciones necesarias (INCLUYENDO MÉDICO)
+            const cita = yield cita_medica_1.default.findByPk(idCita, {
+                include: [
+                    {
+                        association: 'tipoCita',
+                        attributes: ['precio', 'especialidad_medica']
+                    },
+                    {
+                        association: 'paciente',
+                        attributes: ['email', 'nombre']
+                    },
+                    {
+                        association: 'medico',
+                        attributes: ['nombre', 'apellidos']
+                    }
+                ],
+                transaction
+            });
+            // Verificación temprana de cita nula
+            if (!cita || !cita.tipoCita || !cita.medico) {
+                throw new Error(`Cita ${idCita} no encontrada o sin datos necesarios`);
+            }
+            // 2. Validar monto
+            if (montoPagado !== cita.tipoCita.precio) {
+                throw new Error(`Monto discrepante. Esperado: $${cita.tipoCita.precio}, Recibido: $${montoPagado}`);
+            }
+            // 3. Crear factura
+            const factura = yield factura_1.default.create({
+                id_cita: idCita,
+                payment_method_id: 'mercado_pago',
+                transaction_amount: cita.tipoCita.precio,
+                monto_pagado: montoPagado,
+                payment_status: 'approved',
+                estado_pago: 'pagado',
+                fecha_pago: new Date(),
+                estado: 'activo'
+            }, { transaction });
+            // 4. Actualizar estado de la cita
+            yield cita.update({ estado: 'pagado' }, { transaction });
+            // 5. Enviar confirmación por correo (si hay email válido)
+            if (cita.paciente && cita.paciente.email) {
+                try {
+                    // Formatear fecha correctamente
+                    const fechaFormateada = cita.fecha.toLocaleDateString('es-ES', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                    yield emails_1.default.instance.enviarConfirmacionCita({
+                        emailPaciente: cita.paciente.email,
+                        pacienteNombre: cita.paciente.nombre,
+                        fecha: fechaFormateada,
+                        hora_inicio: cita.hora_inicio,
+                        medicoNombre: `${cita.medico.nombre} ${cita.medico.apellidos}`,
+                        especialidad: cita.tipoCita.especialidad_medica
+                    });
+                }
+                catch (emailError) {
+                    console.error('Error al enviar correo (no crítico):', emailError);
+                }
+            }
+            else {
+                console.warn('No se envió correo: paciente sin email válido');
+            }
+            // 6. Commit de la transacción
+            yield transaction.commit();
+            console.log(`Pago ${paymentId} procesado. Factura ID: ${factura.id_factura}`);
+        }
+        catch (error) {
+            yield transaction.rollback();
+            console.error('Error en transacción:', error);
+            throw error;
+        }
+    });
+}
 //# sourceMappingURL=mercadoPago.js.map
