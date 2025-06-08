@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cambiarPassword = exports.deleteUsuario = exports.putUsuario = exports.getUsuario = exports.CrearUsuario = exports.getAllUsuarios = exports.getUsuarios = void 0;
+exports.getPacientesConCitasPagadasYEnCursoYterminado = exports.getPacientesConCitasPagadasYEnCurso = exports.cambiarPassword = exports.deleteUsuario = exports.putUsuario = exports.getUsuario = exports.CrearUsuario = exports.getAllUsuarios = exports.getUsuarios = void 0;
 const usuario_service_1 = __importDefault(require("../services/usuario.service"));
 const usuario_repository_1 = __importDefault(require("../repositories/usuario.repository"));
 const getUsuarios = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -106,5 +106,35 @@ const cambiarPassword = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.cambiarPassword = cambiarPassword;
+const getPacientesConCitasPagadasYEnCurso = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { rut_medico } = req.params;
+    try {
+        const pacientes = yield usuario_service_1.default.getPatientsWithAppointments(rut_medico, ['en_curso', 'pagado', 'terminado']);
+        res.json({
+            ok: true,
+            usuarios: pacientes,
+            total: pacientes.length
+        });
+    }
+    catch (error) {
+        res.status(500).send('Error interno del servidor');
+    }
+});
+exports.getPacientesConCitasPagadasYEnCurso = getPacientesConCitasPagadasYEnCurso;
+const getPacientesConCitasPagadasYEnCursoYterminado = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { rut_medico } = req.params;
+    try {
+        const pacientes = yield usuario_service_1.default.getPatientsWithAppointments(rut_medico, ['en_curso', 'pagado', 'terminado']);
+        res.json({
+            ok: true,
+            usuarios: pacientes,
+            total: pacientes.length
+        });
+    }
+    catch (error) {
+        res.status(500).send('Error interno del servidor');
+    }
+});
+exports.getPacientesConCitasPagadasYEnCursoYterminado = getPacientesConCitasPagadasYEnCursoYterminado;
 // Controladores para las consultas específicas de pacientes...
 //# sourceMappingURL=usuario.js.map

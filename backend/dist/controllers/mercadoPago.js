@@ -185,6 +185,7 @@ function procesarPagoExitoso(paymentId, idCita, montoPagado) {
                 id_cita: idCita,
                 payment_method_id: 'mercado_pago',
                 transaction_amount: cita.tipoCita.precio,
+                monto_pagado: montoPagado,
                 payment_status: 'approved',
                 estado_pago: 'pagado',
                 fecha_pago: new Date(),

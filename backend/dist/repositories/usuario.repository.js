@@ -119,6 +119,28 @@ class UsuarioRepository {
             return usuario.update({ password: newPassword });
         });
     }
+    getPatientsWithAppointments(rut_medico, estados) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return cita_medica_1.default.findAll({
+                where: {
+                    rut_medico,
+                    estado: estados,
+                    estado_actividad: 'activo'
+                },
+                include: [{
+                        model: usuario_1.default,
+                        as: 'paciente',
+                        include: [{
+                                model: rol_1.default,
+                                as: 'rol',
+                                where: { codigo: { [sequelize_1.Op.ne]: 'ADMIN_ROLE' } }
+                            }],
+                        where: { estado: 'activo' },
+                        attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
+                    }]
+            });
+        });
+    }
 }
 exports.default = new UsuarioRepository();
 //# sourceMappingURL=usuario.repository.js.map

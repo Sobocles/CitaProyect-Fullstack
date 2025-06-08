@@ -3,7 +3,7 @@ import mercadopago from "mercadopago";
 
 import { CreatePreferencePayload } from 'mercadopago/models/preferences/create-payload.model';
 import Factura from '../models/factura'; 
-import tipo_cita from './tipo_cita';
+import tipo_cita from '../models/tipo_cita';
 import CitaMedica from '../models/cita_medica';
 import Medico from '../models/medico';
 import Usuario from '../models/usuario';
@@ -189,6 +189,7 @@ async function procesarPagoExitoso(paymentId: number, idCita: number, montoPagad
       id_cita: idCita,
       payment_method_id: 'mercado_pago',
       transaction_amount: cita.tipoCita.precio,
+      monto_pagado: montoPagado,
       payment_status: 'approved',
       estado_pago: 'pagado',
       fecha_pago: new Date(),

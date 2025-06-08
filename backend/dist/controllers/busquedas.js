@@ -44,7 +44,7 @@ const getDocumentosColeccion = (req, res) => __awaiter(void 0, void 0, void 0, f
                 where: {
                     [sequelize_1.Op.and]: [
                         { nombre: { [sequelize_1.Op.like]: `%${busqueda}%` } },
-                        { estado: 'activo' } // Filtrar solo médicos activos
+                        { estado: 'activo' }
                     ]
                 }
             });
@@ -59,7 +59,7 @@ const getDocumentosColeccion = (req, res) => __awaiter(void 0, void 0, void 0, f
                         model: medico_1.default,
                         as: 'medico',
                         attributes: ['nombre', 'apellidos', 'especialidad_medica'],
-                        where: { estado: 'activo' } // Filtrar solo médicos activos
+                        where: { estado: 'activo' }
                     }]
             });
             break;
@@ -93,23 +93,23 @@ const getDocumentosColeccion = (req, res) => __awaiter(void 0, void 0, void 0, f
                                 { '$medico.nombre$': { [sequelize_1.Op.like]: `%${busqueda}%` } }
                             ]
                         },
-                        { estado_actividad: 'activo' } // Añadir esta línea para filtrar solo citas activas
+                        { estado_actividad: 'activo' }
                     ]
                 }
             });
             break;
         case 'tipo_cita':
             data = yield tipo_cita_1.default.findAll({
-                attributes: ['idTipo', 'especialidad_medica', 'precio', 'duracion_cita'],
+                // ✅ CORRECCIÓN: Cambiar 'idTipo' por 'idTipoCita'
+                attributes: ['idTipoCita', 'especialidad_medica', 'precio', 'duracion_cita'],
                 where: {
                     especialidad_medica: {
                         [sequelize_1.Op.like]: `%${busqueda}%`
                     },
-                    estado: 'activo' // Agregar esta línea para filtrar por estado activo
+                    estado: 'activo'
                 }
             });
             break;
-            ;
         case 'facturas':
             data = yield factura_1.default.findAll({
                 where: {
@@ -182,7 +182,7 @@ const getDocumentosColeccion = (req, res) => __awaiter(void 0, void 0, void 0, f
                         { '$paciente.nombre$': { [sequelize_1.Op.like]: `%${busqueda}%` } },
                         { '$medico.nombre$': { [sequelize_1.Op.like]: `%${busqueda}%` } }
                     ],
-                    estado_actividad: 'activo' // Añadir esta línea para filtrar solo citas activas
+                    estado_actividad: 'activo'
                 }
             });
             break;

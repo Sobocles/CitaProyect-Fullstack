@@ -88,6 +88,20 @@ class UsuarioService {
             return usuario_repository_1.default.changePassword(rut, hashedPassword);
         });
     }
+    // Obtener pacientes con citas en estados específicos
+    getPatientsWithAppointments(rut_medico, estados) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const citas = yield usuario_repository_1.default.getPatientsWithAppointments(rut_medico, estados);
+            // Extraer pacientes únicos
+            const pacientesMap = new Map();
+            citas.forEach(cita => {
+                if (cita.paciente && !pacientesMap.has(cita.paciente.rut)) {
+                    pacientesMap.set(cita.paciente.rut, cita.paciente);
+                }
+            });
+            return Array.from(pacientesMap.values());
+        });
+    }
 }
 exports.default = new UsuarioService();
 //# sourceMappingURL=usuario.service.js.map
